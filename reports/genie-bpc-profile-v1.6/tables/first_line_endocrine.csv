@@ -1,0 +1,11 @@
+bca_subtype,stage_dx,first_line_regimens,endocrine_only
+"HR+, HER2+",Stage I,15,3
+"HR+, HER2+",Stage II,46,0
+"HR+, HER2+",Stage III,35,1
+"HR+, HER2+",Stage IV,41,5
+"HR+, HER2-",Stage I,151,83
+"HR+, HER2-",Stage I-III NOS,3,2
+"HR+, HER2-",Stage II,246,36
+"HR+, HER2-",Stage III,118,2
+"HR+, HER2-",Stage IV,140,85
+ALL HR+,ALL,795,217

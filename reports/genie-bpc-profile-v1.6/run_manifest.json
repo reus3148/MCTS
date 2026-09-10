@@ -1,0 +1,27 @@
+{
+  "run_date": "2026-09-10",
+  "generated_at": "2026-09-10T22:24:49+09:00",
+  "git_commit_before_run": "17dd637590ee9e348175f73663e9c64b64bd83f6",
+  "inputs": {
+    "cancers": {
+      "path": "data/external/MCTS_data/clinical_data/cancer_level_dataset_index.csv",
+      "sha256": "eabc4a6c7eda57f8a3d42128f43b9f9c3fda3942b27a18bd37c1366bb578902c"
+    },
+    "regimens": {
+      "path": "data/external/MCTS_data/clinical_data/regimen_cancer_level_dataset.csv",
+      "sha256": "85f655c117a330c0676503dd96ec37ea3729ee97b50771d7d03944ce1b4a9cae"
+    },
+    "imaging": {
+      "path": "data/external/MCTS_data/clinical_data/imaging_level_dataset.csv",
+      "sha256": "b23f016db724f40e9b95d04fc58f0606663ff73e84f7ae494e4d5c9318b5debd"
+    },
+    "patients": {
+      "path": "data/external/MCTS_data/clinical_data/patient_level_dataset.csv",
+      "sha256": "52ddbb37237415d7df5e96412e1036bc9f7fc518a489a16c43159e762f96e911"
+    }
+  },
+  "data_dir": "data/external/MCTS_data/clinical_data",
+  "entry_point": "analysis/37_run_genie_bpc_profile.py",
+  "base_seed": null,
+  "seed_note": "no randomness - every number here is a count or a rate"
+}

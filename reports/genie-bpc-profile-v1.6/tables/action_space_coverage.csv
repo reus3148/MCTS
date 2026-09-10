@@ -1,0 +1,6 @@
+action_axis,environment_levels,observable_in_genie_bpc,note
+timing,neoadjuvant vs adjuvant,False,"regimen start days exist but no surgery date, so before/after is undefined"
+surgery,lumpectomy vs mastectomy,False,not curated - GENIE BPC records systemic regimens only
+chemo,none / standard / intensified,True,regimen drugs and start-end days present for every line
+endocrine,none / standard / extended,True,regimen drugs and start-end days present; duration gives standard vs extended
+radiation,none / local / regional,False,not curated

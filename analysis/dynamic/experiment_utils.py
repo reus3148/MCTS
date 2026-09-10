@@ -151,3 +151,27 @@ def patients_for_standard_error(
     if per_patient_sd == 0:
         return 1
     return math.ceil((per_patient_sd / target_standard_error) ** 2)
+
+
+#: Two-sided 5% critical value and the 80%-power quantile. Named rather than
+#: inlined so a reader can see which convention a "minimum detectable" number
+#: was computed under.
+Z_ALPHA_TWO_SIDED_05 = 1.959963984540054
+Z_POWER_80 = 0.8416212335729143
+
+
+def minimum_detectable_difference(
+    standard_error: float,
+    z_alpha: float = Z_ALPHA_TWO_SIDED_05,
+    z_power: float = Z_POWER_80,
+) -> float:
+    """Smallest true difference this design would catch 80% of the time.
+
+    "No difference" and "could not detect one" are different claims, and a null
+    result is only readable next to the size it could have found. Reported with
+    every negative finding since ``reports/environment-fix-v0.5``; v1.7 needs it
+    because its headline *is* a null.
+    """
+    if standard_error <= 0:
+        raise ValueError("standard_error must be positive")
+    return (float(z_alpha) + float(z_power)) * float(standard_error)

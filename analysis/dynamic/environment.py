@@ -137,12 +137,7 @@ class DynamicBreastCancerEnvironment:
             response = state.response
             tumor_size = state.current_tumor_size_mm
             if state.timing == "neoadjuvant":
-                response = self._sample_response(action, rng)
-                tumor_size = round(
-                    tumor_size
-                    * float(self.config.tumor_size_multipliers[response]),
-                    2,
-                )
+                response, tumor_size = self._chemo_response(state, action, rng)
                 next_phase = "surgery"
             else:
                 next_phase = "endocrine"
@@ -311,6 +306,29 @@ class DynamicBreastCancerEnvironment:
             "death_probability": death_probability,
             "recurrence_probability": recurrence_probability,
         }
+
+    def _chemo_response(
+        self,
+        state: DynamicState,
+        action: Action,
+        rng: random.Random,
+    ) -> tuple[str, float]:
+        """The response a neoadjuvant patient draws, and the size it leaves.
+
+        Extracted as a hook so a *blinded* environment can hide one or both
+        halves without touching :meth:`step`. The response reaches a planner by
+        two separate routes - the label (a terminal hazard multiplier) and the
+        tumour size (which gates BCS eligibility) - and
+        ``analysis/dynamic/blinding.py`` closes them one at a time. See
+        ``reports/closed-loop-value-v1.7``.
+        """
+        response = self._sample_response(action, rng)
+        size = round(
+            state.current_tumor_size_mm
+            * float(self.config.tumor_size_multipliers[response]),
+            2,
+        )
+        return response, size
 
     def _sample_response(self, action: Action, rng: random.Random) -> str:
         probabilities = self.config.response_probabilities[action]

@@ -1,0 +1,340 @@
+{
+  "run_date": "2026-09-10",
+  "analysis_label": "closed-loop-value-v1.7",
+  "question": "How much of the MCTS-minus-NCCN utility gap comes from the searching policy being able to observe the response it drew?",
+  "estimand": "MCTS-minus-NCCN utility gap over the same 40 patients and 12 seeds as v1.5, under three planners that differ only in what they are shown about the neoadjuvant response. Episodes are simulated in the unmodified environment in every arm.",
+  "scope_warning": "A property of our own simulator's information structure. Not a clinical effect, and not a claim about real closed-loop care.",
+  "prespecified_prediction": {
+    "primary": "Arm C's MCTS utility is lower than arm A's - information has no negative value to a policy that may ignore it.",
+    "magnitude": "The utility gap falls by less than 0.005 from A to C. v1.5 put everything unexplained at +0.0013 (SE 0.0017) and closed-loop adaptation has to live inside that.",
+    "monotone": "Arm B sits between A and C: closing one of the two routes should cost no more than closing both.",
+    "option_value": "MCTS chooses neoadjuvant less often in arm C - a blinded planner cannot hope a major response will win back breast-conserving surgery.",
+    "why": "v1.5 could not separate closed-loop adaptation from noise. v1.6 showed the phenomenon is real in recorded care, so the remaining question is how much of the simulated advantage is made of it."
+  },
+  "design": {
+    "patients": 40,
+    "seeds": 12,
+    "simulations": 1024,
+    "episodes_per_policy": 40,
+    "reward_model": "treatment-neutral (v1.4)",
+    "config": "configs/dynamic_v0_5.json",
+    "arms": [
+      {
+        "arm": "none",
+        "label": "A. 그대로 (응답 라벨 + 실제 종양 크기)"
+      },
+      {
+        "arm": "label",
+        "label": "B. 라벨만 가림 (종양 크기는 그대로)"
+      },
+      {
+        "arm": "full",
+        "label": "C. 완전 블라인드 (라벨 + 크기 둘 다)"
+      }
+    ]
+  },
+  "arms": {
+    "none": {
+      "per_seed_gap": [
+        0.011221666666666907,
+        0.02230583333333358,
+        0.018314166666666853,
+        0.022985833333333372,
+        0.022038333333333382,
+        0.021894999999999887,
+        0.023667500000000175,
+        0.01373833333333363,
+        0.02649833333333329,
+        0.01847333333333334,
+        0.02264166666666667,
+        0.01444583333333338
+      ],
+      "per_seed_mcts": [
+        0.829195,
+        0.8255716666666668,
+        0.8268083333333334,
+        0.8268833333333333,
+        0.8260166666666666,
+        0.8233508333333333,
+        0.82603,
+        0.8124716666666668,
+        0.8266724999999999,
+        0.8215116666666666,
+        0.8292624999999999,
+        0.8165908333333334
+      ],
+      "utility_gap": 0.01985215277777787,
+      "standard_error": 0.0013389899048387888,
+      "mcts_utility": 0.8241970833333333,
+      "nccn_utility": 0.8043449305555553,
+      "blinded_decisions": 0,
+      "fallbacks": 0,
+      "label": "A. 그대로 (응답 라벨 + 실제 종양 크기)"
+    },
+    "label": {
+      "per_seed_gap": [
+        0.00427583333333359,
+        0.017515833333333397,
+        0.014052500000000023,
+        0.024025833333333302,
+        0.017079999999999984,
+        0.02309166666666651,
+        0.023462500000000164,
+        0.010892500000000083,
+        0.02124499999999996,
+        0.017092500000000066,
+        0.016594166666666688,
+        0.016636666666666633
+      ],
+      "per_seed_mcts": [
+        0.8222491666666667,
+        0.8207816666666666,
+        0.8225466666666665,
+        0.8279233333333332,
+        0.8210583333333332,
+        0.8245474999999999,
+        0.825825,
+        0.8096258333333333,
+        0.8214191666666666,
+        0.8201308333333334,
+        0.8232149999999999,
+        0.8187816666666666
+      ],
+      "utility_gap": 0.017163750000000033,
+      "standard_error": 0.001638560855182468,
+      "mcts_utility": 0.8215086805555555,
+      "nccn_utility": 0.8043449305555553,
+      "blinded_decisions": 8267,
+      "fallbacks": 0,
+      "label": "B. 라벨만 가림 (종양 크기는 그대로)"
+    },
+    "full": {
+      "per_seed_gap": [
+        0.007125833333333609,
+        0.018445833333333383,
+        0.019883333333333364,
+        0.02264333333333335,
+        0.015607499999999996,
+        0.01816833333333323,
+        0.02815083333333357,
+        0.02360583333333366,
+        0.02584999999999993,
+        0.01547833333333326,
+        0.02311333333333343,
+        0.01576416666666669
+      ],
+      "per_seed_mcts": [
+        0.8250991666666667,
+        0.8217116666666666,
+        0.8283774999999999,
+        0.8265408333333333,
+        0.8195858333333332,
+        0.8196241666666666,
+        0.8305133333333334,
+        0.8223391666666668,
+        0.8260241666666666,
+        0.8185166666666666,
+        0.8297341666666667,
+        0.8179091666666667
+      ],
+      "utility_gap": 0.019486388888888956,
+      "standard_error": 0.001643133421355669,
+      "mcts_utility": 0.8238313194444443,
+      "nccn_utility": 0.8043449305555553,
+      "blinded_decisions": 8062,
+      "fallbacks": 0,
+      "label": "C. 완전 블라인드 (라벨 + 크기 둘 다)"
+    }
+  },
+  "action_mix": {
+    "none": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 79.167,
+          "neoadjuvant": 20.833
+        },
+        "surgery": {
+          "MAST": 52.635,
+          "BCS": 47.365
+        },
+        "chemo": {
+          "none": 68.87,
+          "standard": 18.875,
+          "intensified": 12.255
+        },
+        "endocrine": {
+          "none": 70.391,
+          "standard": 16.542,
+          "extended": 13.068
+        },
+        "radiation": {
+          "none": 72.146,
+          "regional": 15.016,
+          "local": 12.839
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    },
+    "label": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 78.125,
+          "neoadjuvant": 21.875
+        },
+        "surgery": {
+          "MAST": 52.193,
+          "BCS": 47.807
+        },
+        "chemo": {
+          "none": 69.37,
+          "standard": 19.719,
+          "intensified": 10.911
+        },
+        "endocrine": {
+          "none": 70.391,
+          "standard": 15.531,
+          "extended": 14.078
+        },
+        "radiation": {
+          "none": 72.193,
+          "regional": 15.344,
+          "local": 12.464
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    },
+    "full": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 79.167,
+          "neoadjuvant": 20.833
+        },
+        "surgery": {
+          "MAST": 54.224,
+          "BCS": 45.776
+        },
+        "chemo": {
+          "none": 69.812,
+          "standard": 17.443,
+          "intensified": 12.745
+        },
+        "endocrine": {
+          "none": 70.286,
+          "standard": 16.115,
+          "extended": 13.599
+        },
+        "radiation": {
+          "none": 71.87,
+          "regional": 15.271,
+          "local": 12.859
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    }
+  },
+  "verdict": {
+    "gap_none": 0.01985215277777787,
+    "gap_label": 0.017163750000000033,
+    "gap_full": 0.019486388888888956,
+    "mcts_none": 0.8241970833333333,
+    "mcts_label": 0.8215086805555555,
+    "mcts_full": 0.8238313194444443,
+    "label_vs_none": {
+      "difference": -0.0026884027777778394,
+      "standard_error": 0.000907611255356315,
+      "z": -2.962064167794406
+    },
+    "full_vs_none": {
+      "difference": -0.0003657638888889166,
+      "standard_error": 0.0012813107974338355,
+      "z": -0.28546070915928884
+    },
+    "full_vs_label": {
+      "difference": 0.0023226388888889227,
+      "standard_error": 0.0013960187907601693,
+      "z": 1.6637590441201613
+    },
+    "closed_loop_value": 0.00036576388888891545,
+    "minimum_detectable_difference": 0.003589701389899173,
+    "seeds_with_full_below_none": 7,
+    "seeds_with_label_below_none": 9,
+    "share_of_v15_baseline": 0.018424394219771708,
+    "primary_prediction_met": true,
+    "magnitude_prediction_met": true,
+    "magnitude_ceiling": 0.005,
+    "monotone_prediction_met": false,
+    "neoadjuvant_pct_none": 20.833,
+    "neoadjuvant_pct_label": 21.875,
+    "neoadjuvant_pct_full": 20.833,
+    "option_value_prediction_met": false,
+    "blinded_decisions_full": 8062,
+    "fallbacks_full": 0,
+    "reproduces_v1_5_baseline": true,
+    "v1_5_baseline_gap": 0.01985215277777787,
+    "nccn_utility_spread_across_arms": 0.0,
+    "nccn_identical_across_arms": true
+  }
+}

@@ -49,6 +49,20 @@ class DynamicConfig:
             return 1.0
         return 1.0 / ((1.0 + float(self.discount_rate_annual)) ** int(year))
 
+    def tumor_multiplier_mean(self, intensity: str) -> float:
+        """E[tumour-size multiplier] of the response channel under ``intensity``.
+
+        The size a blinded planner should expect after neoadjuvant chemotherapy,
+        before it learns which response was drawn. Unlike the hazard channel
+        this one is *not* neutralised - shrinking the tumour is the declared
+        point of neoadjuvant treatment - so the mean is a real number below 1.0.
+        """
+        probabilities = self.response_probabilities[intensity]
+        return sum(
+            float(probability) * float(self.tumor_size_multipliers[response])
+            for response, probability in probabilities.items()
+        )
+
     def response_multiplier_mean(self, intensity: str, outcome: str) -> float:
         """E[hazard multiplier] of the response channel under ``intensity``.
 

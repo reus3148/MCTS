@@ -5,6 +5,7 @@ import unittest
 
 from analysis.dynamic.experiment_utils import (
     confidence_interval,
+    minimum_detectable_difference,
     patients_for_standard_error,
     rank_parameters_by_influence,
     rescale_response_major,
@@ -162,6 +163,25 @@ class PatientsForStandardErrorTests(unittest.TestCase):
     def test_rejects_negative_spread(self) -> None:
         with self.assertRaises(ValueError):
             patients_for_standard_error(-0.1, 0.01)
+
+
+class MinimumDetectableDifferenceTests(unittest.TestCase):
+    def test_uses_the_conventional_two_sided_5_percent_80_power_constants(self):
+        # (1.96 + 0.84) * SE, the textbook expression. Pinned so a later change
+        # to the convention cannot slip in unnoticed - a null result is quoted
+        # next to this number.
+        self.assertAlmostEqual(
+            minimum_detectable_difference(1.0), 2.8015852181129685, places=10)
+
+    def test_scales_linearly_with_the_standard_error(self):
+        self.assertAlmostEqual(
+            minimum_detectable_difference(0.002),
+            2 * minimum_detectable_difference(0.001), places=12)
+
+    def test_rejects_non_positive_standard_error(self):
+        for value in (0.0, -0.001):
+            with self.assertRaises(ValueError):
+                minimum_detectable_difference(value)
 
 
 if __name__ == "__main__":

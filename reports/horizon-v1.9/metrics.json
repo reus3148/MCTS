@@ -1,0 +1,588 @@
+{
+  "run_date": "2026-09-13",
+  "analysis_label": "horizon-v1.9",
+  "question": "Does crediting life after the decision horizon remove the artefact that made v1.8's salvage decision collapse, and does a decision point then carry a detectable closed-loop share?",
+  "estimand": "MCTS-minus-NCCN utility gap over the same 40 patients and 12 seeds as v1.5-v1.8 under the v0.7 environment (ten passive years credited past the horizon), in four arms: no salvage, inert salvage, MCTS deciding salvage, MCTS deferring salvage. C minus D is the value of the decision point; A minus v1.8's v0.5 arm is what the tail alone does.",
+  "scope_warning": "The tail length and the salvage parameters are declared synthetic assumptions. A property of our simulator, not a clinical effect.",
+  "prespecified_prediction": {
+    "null_control": "|B - A| < 0.005, seed-paired, as in v1.8.",
+    "artefact_gone": "MCTS's salvage decline rate in year 4 exceeds its year-1 rate by less than 10 percentage points (v1.8: +37.8).",
+    "nccn_no_longer_loses": "NCCN utility in C is not below B by more than 0.0005 (v1.8: -0.0010, z = -13.7).",
+    "decision_point": "C - D > 0, direction only; size reported with its MDE.",
+    "baseline_widens": "A (v0.7) minus v1.8's arm A (v0.5) is positive: the tail extends the benefit of channels only MCTS uses. A fairness probe.",
+    "why": "v1.8 found that a five-year cliff makes late treatment worthless to any expected-utility planner. v0.7 credits ten passive years past the horizon, sized against GENIE BPC survival after advanced disease, and changes nothing else."
+  },
+  "design": {
+    "patients": 40,
+    "seeds": 12,
+    "simulations": 1024,
+    "episodes_per_policy": 40,
+    "reward_model": "treatment-neutral (v1.4)",
+    "config": "configs/dynamic_v0_7.json",
+    "terminal_tail_years": 10,
+    "declared_salvage": {
+      "hazard_multipliers": {
+        "none": {
+          "death": 1.0,
+          "recurrence": 1.0
+        },
+        "systemic": {
+          "death": 0.85,
+          "recurrence": 1.0
+        }
+      },
+      "acute_toxicity_probabilities": {
+        "none": 0.0,
+        "systemic": 0.2
+      },
+      "treatment_burden": {
+        "none": 0.0,
+        "systemic": 0.1
+      }
+    },
+    "arms": [
+      {
+        "arm": "tail",
+        "label": "A. v0.7 말기 가치만 (구제 결정 없음)"
+      },
+      {
+        "arm": "inert",
+        "label": "B. v0.7 + 영대조 구제 (효과 없음)"
+      },
+      {
+        "arm": "decide",
+        "label": "C. v0.7 + 구제 — MCTS가 결정"
+      },
+      {
+        "arm": "defer",
+        "label": "D. v0.7 + 구제 — 규칙에 위임"
+      }
+    ]
+  },
+  "arms": {
+    "tail": {
+      "per_seed_gap": [
+        0.03547163894205352,
+        0.06948922811391078,
+        0.05773744442289863,
+        0.030497276279144225,
+        0.0727097749755119,
+        0.03593145327827174,
+        0.08417532562731678,
+        0.031434944139170584,
+        0.05376712563393582,
+        0.04579940982168362,
+        0.05969713644517172,
+        0.044978153319205294
+      ],
+      "per_seed_mcts": [
+        1.9670618383408385,
+        1.9507877923654522,
+        1.9379186991963961,
+        1.913708760649834,
+        1.943997552616246,
+        1.9098044681761592,
+        1.955603978118982,
+        1.8930492069037683,
+        1.9260016262768525,
+        1.9381511877289384,
+        1.9515741027272244,
+        1.9306566493713384
+      ],
+      "per_seed_nccn": [
+        1.931590199398785,
+        1.8812985642515414,
+        1.8801812547734975,
+        1.8832114843706897,
+        1.8712877776407342,
+        1.8738730148978875,
+        1.8714286524916652,
+        1.8616142627645977,
+        1.8722345006429166,
+        1.8923517779072547,
+        1.8918769662820527,
+        1.8856784960521331
+      ],
+      "utility_gap": 0.05180740924985622,
+      "standard_error": 0.0050522186003657595,
+      "mcts_utility": 1.9348596552060027,
+      "nccn_utility": 1.8830522459561463,
+      "mcts_recurrence_pct": 9.505208333333332,
+      "mcts_salvage_decisions": 0,
+      "mcts_episodes_with_adaptation_pct": 33.33333333333333,
+      "label": "A. v0.7 말기 가치만 (구제 결정 없음)"
+    },
+    "inert": {
+      "per_seed_gap": [
+        0.04509185322349629,
+        0.045918627027329295,
+        0.04351436973142375,
+        0.02001279314755733,
+        0.057761787195869996,
+        0.05785854319295902,
+        0.05054593464340895,
+        0.04863827340641458,
+        0.03365104878970615,
+        0.045520903287097125,
+        0.04302520857737058,
+        0.0378042926900235
+      ],
+      "per_seed_mcts": [
+        1.9761911864134416,
+        1.9284252499388401,
+        1.9231398897179388,
+        1.9086347668766588,
+        1.9260515601927501,
+        1.9341793338775766,
+        1.923303330655798,
+        1.9076968543437647,
+        1.907648355061615,
+        1.9359326641656267,
+        1.9331136468406225,
+        1.9182382639721254
+      ],
+      "per_seed_nccn": [
+        1.9310993331899453,
+        1.8825066229115108,
+        1.879625519986515,
+        1.8886219737291015,
+        1.8682897729968801,
+        1.8763207906846175,
+        1.872757396012389,
+        1.85905858093735,
+        1.8739973062719089,
+        1.8904117608785296,
+        1.890088438263252,
+        1.8804339712821019
+      ],
+      "utility_gap": 0.04411196957605471,
+      "standard_error": 0.002983419520162676,
+      "mcts_utility": 1.9268795918380628,
+      "nccn_utility": 1.8827676222620084,
+      "mcts_recurrence_pct": 9.15625,
+      "mcts_salvage_decisions": 1461,
+      "mcts_episodes_with_adaptation_pct": 39.96354166666667,
+      "label": "B. v0.7 + 영대조 구제 (효과 없음)"
+    },
+    "decide": {
+      "per_seed_gap": [
+        0.06328462993533135,
+        0.03660996141870143,
+        0.06786294564024598,
+        0.03759286178588983,
+        0.05678526289630481,
+        0.07506296729542927,
+        0.07055066751480399,
+        0.035613784669881854,
+        0.04043754081947282,
+        0.03927142320513077,
+        0.051409572555861205,
+        0.07593944326997515
+      ],
+      "per_seed_mcts": [
+        1.9995761237450793,
+        1.9252578111725498,
+        1.9524786588666703,
+        1.9303925449187411,
+        1.9321699105054595,
+        1.9562752146470384,
+        1.9473225059826735,
+        1.9004017743489918,
+        1.9193344951187814,
+        1.936112375828,
+        1.9450516827390196,
+        1.9593950823074036
+      ],
+      "per_seed_nccn": [
+        1.936291493809748,
+        1.8886478497538484,
+        1.8846157132264243,
+        1.8927996831328513,
+        1.8753846476091547,
+        1.881212247351609,
+        1.8767718384678695,
+        1.86478798967911,
+        1.8788969542993086,
+        1.8968409526228693,
+        1.8936421101831584,
+        1.8834556390374284
+      ],
+      "utility_gap": 0.054201755083919036,
+      "standard_error": 0.004607149687875072,
+      "mcts_utility": 1.9419806816817007,
+      "nccn_utility": 1.8877789265977816,
+      "mcts_recurrence_pct": 9.104166666666668,
+      "mcts_salvage_decisions": 1430,
+      "mcts_episodes_with_adaptation_pct": 40.14583333333333,
+      "label": "C. v0.7 + 구제 — MCTS가 결정"
+    },
+    "defer": {
+      "per_seed_gap": [
+        0.03511737759996292,
+        0.048641445184216536,
+        0.03315309334744465,
+        0.04307469549747833,
+        0.03326793036831632,
+        0.05945589040239563,
+        0.055202117476984114,
+        0.046423565464828176,
+        0.05827279925171158,
+        0.05109110117085258,
+        0.05149565556962332,
+        0.06395510052328368
+      ],
+      "per_seed_mcts": [
+        1.9714088714097109,
+        1.937289294938065,
+        1.917768806573869,
+        1.9358743786303296,
+        1.908652577977471,
+        1.9406681377540047,
+        1.9319739559448537,
+        1.9112115551439381,
+        1.9371697535510202,
+        1.947932053793722,
+        1.9451377657527817,
+        1.947410739560712
+      ],
+      "per_seed_nccn": [
+        1.936291493809748,
+        1.8886478497538484,
+        1.8846157132264243,
+        1.8927996831328513,
+        1.8753846476091547,
+        1.881212247351609,
+        1.8767718384678695,
+        1.86478798967911,
+        1.8788969542993086,
+        1.8968409526228693,
+        1.8936421101831584,
+        1.8834556390374284
+      ],
+      "utility_gap": 0.04826256432142482,
+      "standard_error": 0.003008488605707013,
+      "mcts_utility": 1.9360414909192067,
+      "nccn_utility": 1.8877789265977816,
+      "mcts_recurrence_pct": 9.265625,
+      "mcts_salvage_decisions": 1451,
+      "mcts_episodes_with_adaptation_pct": 38.807291666666664,
+      "label": "D. v0.7 + 구제 — 규칙에 위임"
+    }
+  },
+  "action_mix": {
+    "tail": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 66.667,
+          "neoadjuvant": 33.333
+        },
+        "surgery": {
+          "MAST": 51.917,
+          "BCS": 48.083
+        },
+        "chemo": {
+          "none": 46.219,
+          "intensified": 38.911,
+          "standard": 14.87
+        },
+        "endocrine": {
+          "none": 62.771,
+          "extended": 18.927,
+          "standard": 18.302
+        },
+        "radiation": {
+          "none": 59.438,
+          "regional": 22.526,
+          "local": 18.036
+        },
+        "salvage": {
+          "None": 100.0
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        },
+        "salvage": {
+          "None": 100.0
+        }
+      }
+    },
+    "inert": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 64.792,
+          "neoadjuvant": 35.208
+        },
+        "surgery": {
+          "MAST": 50.828,
+          "BCS": 49.172
+        },
+        "chemo": {
+          "none": 43.521,
+          "intensified": 40.87,
+          "standard": 15.609
+        },
+        "endocrine": {
+          "none": 61.49,
+          "extended": 19.922,
+          "standard": 18.589
+        },
+        "radiation": {
+          "none": 57.391,
+          "regional": 23.906,
+          "local": 18.703
+        },
+        "salvage": {
+          "None": 92.391,
+          "systemic": 3.953,
+          "none": 3.656
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        },
+        "salvage": {
+          "None": 90.589,
+          "systemic": 9.411
+        }
+      }
+    },
+    "decide": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 64.167,
+          "neoadjuvant": 35.833
+        },
+        "surgery": {
+          "MAST": 51.224,
+          "BCS": 48.776
+        },
+        "chemo": {
+          "none": 43.734,
+          "intensified": 41.526,
+          "standard": 14.74
+        },
+        "endocrine": {
+          "none": 62.297,
+          "extended": 20.177,
+          "standard": 17.526
+        },
+        "radiation": {
+          "none": 59.672,
+          "regional": 21.901,
+          "local": 18.427
+        },
+        "salvage": {
+          "None": 92.552,
+          "systemic": 7.354,
+          "none": 0.094
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        },
+        "salvage": {
+          "None": 90.589,
+          "systemic": 9.411
+        }
+      }
+    },
+    "defer": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 65.833,
+          "neoadjuvant": 34.167
+        },
+        "surgery": {
+          "MAST": 51.521,
+          "BCS": 48.479
+        },
+        "chemo": {
+          "none": 44.37,
+          "intensified": 40.708,
+          "standard": 14.922
+        },
+        "endocrine": {
+          "none": 64.193,
+          "extended": 19.906,
+          "standard": 15.901
+        },
+        "radiation": {
+          "none": 57.948,
+          "regional": 23.938,
+          "local": 18.115
+        },
+        "salvage": {
+          "None": 92.443,
+          "systemic": 7.557
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        },
+        "salvage": {
+          "None": 90.589,
+          "systemic": 9.411
+        }
+      }
+    }
+  },
+  "verdict": {
+    "gap_tail": 0.05180740924985622,
+    "gap_inert": 0.04411196957605471,
+    "gap_decide": 0.054201755083919036,
+    "gap_defer": 0.04826256432142482,
+    "gap_v05_from_v1_8": 0.01985215277777787,
+    "inert_vs_tail": {
+      "difference": -0.007695439673801503,
+      "standard_error": 0.004857816376106411,
+      "z": -1.5841355617417299,
+      "seeds_positive": 3
+    },
+    "decide_vs_defer": {
+      "difference": 0.0059391907624942175,
+      "standard_error": 0.0051494302782716375,
+      "z": 1.1533685168153507,
+      "seeds_positive": 6
+    },
+    "value_of_decision_point": 0.0059391907624942175,
+    "minimum_detectable_difference": 0.014426567749309168,
+    "nccn_forced_salvage_cost": {
+      "difference": 0.005011304335773181,
+      "standard_error": 0.0003478942496399496,
+      "z": 14.404677113690699,
+      "seeds_positive": 12
+    },
+    "nccn_forced_salvage_cost_v1_8": {
+      "difference": -0.0010437500000000006,
+      "standard_error": 7.623751070647056e-05,
+      "z": -13.690767055847926,
+      "seeds_positive": 0
+    },
+    "mcts_decide_vs_inert": {
+      "difference": 0.015101089843637505,
+      "standard_error": 0.004159087316655915,
+      "z": 3.6308662679819457,
+      "seeds_positive": 10
+    },
+    "tail_vs_v05": {
+      "difference": 0.03195525647207834,
+      "standard_error": 0.004527613440080352,
+      "z": 7.057858824518205,
+      "seeds_positive": 12
+    },
+    "nccn_tail_vs_v05": {
+      "difference": 1.0787073154005908,
+      "standard_error": 0.003896908801758433,
+      "z": 276.8110238848385,
+      "seeds_positive": 12
+    },
+    "mcts_tail_vs_v05": {
+      "difference": 1.110662571872669,
+      "standard_error": 0.0053187217166198964,
+      "z": 208.82133547278477,
+      "seeds_positive": 12
+    },
+    "salvage_decline_pct_year1": 1.5151515151515151,
+    "salvage_decline_pct_year4": 1.36986301369863,
+    "salvage_decline_pct_year1_v1_8": 62.155388,
+    "salvage_decline_pct_year4_v1_8": 100.0,
+    "mcts_salvage_mix_decide": {
+      "None": 92.552,
+      "systemic": 7.354,
+      "none": 0.094
+    },
+    "adaptation_pct_decide": 40.14583333333333,
+    "genie_post_advanced_survival": {
+      "n": 894,
+      "events": 538,
+      "median_years": 3.87953456536619,
+      "survival": {
+        "1": 0.9020888160249264,
+        "2": 0.732718770569698,
+        "3": 0.599429305057266,
+        "5": 0.3987961937168155,
+        "8": 0.24744041724960347,
+        "10": 0.18437780749922442
+      }
+    },
+    "null_control_passed": false,
+    "artefact_gone_prediction_met": true,
+    "nccn_no_longer_loses_prediction_met": true,
+    "decision_point_prediction_met": true,
+    "baseline_widens_prediction_met": true,
+    "nccn_identical_decide_vs_defer": true
+  }
+}

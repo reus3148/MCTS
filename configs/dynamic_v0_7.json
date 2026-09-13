@@ -1,0 +1,179 @@
+{
+  "label": "metabric-dynamic-v0.7",
+  "assumption_status": "Synthetic teaching assumptions; response channel mean-neutralised, timing effect declared explicitly; v0.6 salvage decision at recurrence; v0.7 credits ten years of passive follow-up past the decision horizon as a terminal value (GENIE BPC: median survival after advanced disease 3.9 y, 40% at 5 y, 18% at 10 y); salvage benefit and cost pending clinical review; not clinical effect estimates",
+  "horizon_years": 5,
+  "eligibility": {
+    "bcs_max_tumor_mm": 30.0,
+    "bcs_max_stage": 2,
+    "neoadjuvant_min_stage": 2,
+    "neoadjuvant_high_risk_subtypes": [
+      "HR+/HER2+",
+      "HR-/HER2+",
+      "TNBC"
+    ],
+    "toxicity_guardrail_threshold": 1
+  },
+  "response_probabilities": {
+    "standard": {
+      "major": 0.25,
+      "partial": 0.5,
+      "none": 0.25
+    },
+    "intensified": {
+      "major": 0.35,
+      "partial": 0.45,
+      "none": 0.2
+    }
+  },
+  "tumor_size_multipliers": {
+    "major": 0.5,
+    "partial": 0.75,
+    "none": 1.0,
+    "not_applicable": 1.0
+  },
+  "acute_toxicity_probabilities": {
+    "surgery": {
+      "BCS": 0.05,
+      "MAST": 0.1
+    },
+    "chemo": {
+      "none": 0.0,
+      "standard": 0.15,
+      "intensified": 0.3
+    },
+    "endocrine": {
+      "none": 0.0,
+      "standard": 0.05,
+      "extended": 0.1
+    },
+    "radiation": {
+      "none": 0.0,
+      "local": 0.05,
+      "regional": 0.12
+    },
+    "salvage": {
+      "none": 0.0,
+      "systemic": 0.2
+    }
+  },
+  "treatment_burden": {
+    "timing": {
+      "surgery_first": 0.0,
+      "neoadjuvant": 0.03
+    },
+    "surgery": {
+      "BCS": 0.05,
+      "MAST": 0.1
+    },
+    "chemo": {
+      "none": 0.0,
+      "standard": 0.12,
+      "intensified": 0.2
+    },
+    "endocrine": {
+      "none": 0.0,
+      "standard": 0.03,
+      "extended": 0.06
+    },
+    "radiation": {
+      "none": 0.0,
+      "local": 0.05,
+      "regional": 0.09
+    },
+    "salvage": {
+      "none": 0.0,
+      "systemic": 0.1
+    }
+  },
+  "hazard_multipliers": {
+    "response": {
+      "major": {
+        "death": 0.95,
+        "recurrence": 0.8
+      },
+      "partial": {
+        "death": 0.98,
+        "recurrence": 0.92
+      },
+      "none": {
+        "death": 1.05,
+        "recurrence": 1.1
+      },
+      "not_applicable": {
+        "death": 1.0,
+        "recurrence": 1.0
+      }
+    },
+    "timing": {
+      "surgery_first": {
+        "death": 1.0,
+        "recurrence": 1.0
+      },
+      "neoadjuvant": {
+        "death": 1.0,
+        "recurrence": 1.0
+      }
+    },
+    "chemo": {
+      "none": {
+        "death": 1.0,
+        "recurrence": 1.0
+      },
+      "standard": {
+        "death": 1.0,
+        "recurrence": 1.0
+      },
+      "intensified": {
+        "death": 0.95,
+        "recurrence": 0.9
+      }
+    },
+    "endocrine": {
+      "none": {
+        "death": 1.0,
+        "recurrence": 1.0
+      },
+      "standard": {
+        "death": 1.0,
+        "recurrence": 1.0
+      },
+      "extended": {
+        "death": 0.98,
+        "recurrence": 0.92
+      }
+    },
+    "radiation": {
+      "none": {
+        "death": 1.0,
+        "recurrence": 1.0
+      },
+      "local": {
+        "death": 1.0,
+        "recurrence": 1.0
+      },
+      "regional": {
+        "death": 1.0,
+        "recurrence": 0.95
+      }
+    },
+    "salvage": {
+      "none": {
+        "death": 1.0,
+        "recurrence": 1.0
+      },
+      "systemic": {
+        "death": 0.85,
+        "recurrence": 1.0
+      }
+    },
+    "death_after_recurrence": 2.0
+  },
+  "reward": {
+    "alive_year": 1.0,
+    "recurrence_free_year": 0.5,
+    "acute_toxicity_penalty": 0.15
+  },
+  "discount_rate_annual": 0.0,
+  "response_channel_neutralised": true,
+  "terminal_tail_years": 10
+}

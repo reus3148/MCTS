@@ -1,0 +1,22 @@
+{
+  "run_date": "2026-09-13",
+  "generated_at": "2026-09-13T23:14:28+09:00",
+  "git_commit_before_run": "0aecfbd172f1887f12e7c838d67109e5ef9751d7",
+  "inputs": {
+    "data": {
+      "path": "data/processed/patients_with_nccn.csv",
+      "sha256": "23e76e584ebb3a308583e1f278df4b4befba19f7d6175361483149f5b17cab8f"
+    },
+    "assumptions_v07": {
+      "path": "configs/dynamic_v0_7.json",
+      "sha256": "93d797e003d465dc61fdb0a4da9a8431df5e4bbb9a826600e4b70ee72ac23385"
+    },
+    "genie_cancers": {
+      "path": "data/external/MCTS_data/clinical_data/cancer_level_dataset_index.csv",
+      "sha256": "eabc4a6c7eda57f8a3d42128f43b9f9c3fda3942b27a18bd37c1366bb578902c"
+    }
+  },
+  "genie_data_dir": "data/external/MCTS_data/clinical_data",
+  "entry_point": "analysis/43_run_horizon.py",
+  "base_seed": 20260720
+}

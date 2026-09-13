@@ -89,6 +89,23 @@ def null_control(config: dict) -> dict:
     return data
 
 
+def without_salvage(config: dict) -> dict:
+    """The same config with the salvage decision closed again.
+
+    Deep copy of a raw JSON dict with the three ``salvage`` blocks removed, so
+    an environment built from it never enters the salvage phase. v1.9 uses it
+    to measure what the terminal value alone does before any decision is
+    opened on top of it.
+    """
+    if "salvage" not in config["hazard_multipliers"]:
+        raise ValueError("config declares no salvage block to remove")
+    data = copy.deepcopy(config)
+    for block in ("hazard_multipliers", "acute_toxicity_probabilities",
+                  "treatment_burden"):
+        data[block].pop("salvage", None)
+    return data
+
+
 def adaptation_opportunities(episodes: pd.DataFrame) -> pd.Series:
     """Number of places each episode gave the policy something to adapt to.
 

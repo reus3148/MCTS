@@ -32,6 +32,15 @@ class DynamicConfig:
     #: default; v0.2-v0.4 ran with it off, and the impact of that is measured in
     #: ``reports/environment-fix-v0.5``.
     response_channel_neutralised: bool = True
+    #: v0.7 (reports/horizon-v1.9): years of *passive* follow-up credited at the
+    #: end of the decision horizon as a terminal value - the expected discounted
+    #: reward of continuing under the state's current hazards with no further
+    #: decisions. 0 reproduces v0.2-v0.6, where life after the horizon counts
+    #: for nothing and every late decision is worth less than an early one for
+    #: no clinical reason. GENIE BPC puts median survival after advanced disease
+    #: at 3.9 years with 40% alive at 5 and 18% at 10, so a five-year cliff cuts
+    #: off most of what a recurrence leaves.
+    terminal_tail_years: int = 0
 
     @property
     def max_followup_reward(self) -> float:
@@ -108,6 +117,8 @@ def load_dynamic_config(path: str | Path) -> DynamicConfig:
         raise ValueError("maximum follow-up reward must be positive")
     if not -1.0 < float(config.discount_rate_annual) < 1.0:
         raise ValueError("discount_rate_annual must be in (-1, 1)")
+    if int(config.terminal_tail_years) < 0:
+        raise ValueError("terminal_tail_years must be non-negative")
     _validate_probabilities(config)
     return config
 

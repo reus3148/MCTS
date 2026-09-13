@@ -42,6 +42,7 @@ CANCER_COLUMNS = (
     "ca_bca_er", "ca_bca_pr", "ca_bca_her_summ",
     "ca_n_regimens",
     "os_dx_status", "tt_os_dx_yrs",
+    "os_adv_status", "tt_os_adv_yrs",
 )
 
 #: Columns kept from the regimen table.

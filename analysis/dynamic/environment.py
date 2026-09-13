@@ -339,11 +339,58 @@ class DynamicBreastCancerEnvironment:
         discounted = self.config.normalized(raw_reward) * (
             self.config.discount_factor(year)
         )
+        # v0.7: life after the horizon is credited as a terminal value instead
+        # of counting for nothing. Zero when the tail is zero, so v0.2-v0.6
+        # are unchanged.
+        if next_phase == "terminal":
+            discounted += self.terminal_value(next_state)
         return next_state, discounted, {
             "event": "recurrence" if recurrence_now else "no_event",
             "death_probability": death_probability,
             "recurrence_probability": recurrence_probability,
         }
+
+    def terminal_value(self, state: DynamicState) -> float:
+        """Expected discounted reward of ``terminal_tail_years`` of passive follow-up.
+
+        Continues the environment's own annual event model past the decision
+        horizon with no further decisions: a patient who has not recurred may
+        still recur (and then carries the post-recurrence hazard with **no**
+        salvage, since no decision is opened in the tail), a recurred patient
+        keeps whatever salvage was chosen, and death is absorbing. The same
+        function credits both policies, so it cannot favour either; what it
+        removes is the cliff that made every late decision worth less than an
+        early one for no clinical reason (reports/decision-points-v1.8).
+
+        The tail is an expectation, not a simulation - no random draws, so the
+        random stream and every pre-v0.7 result are untouched when the tail is
+        zero.
+        """
+        tail = int(self.config.terminal_tail_years)
+        if tail <= 0 or not state.alive:
+            return 0.0
+        p_death, p_recurrence = self.annual_event_probabilities(state)
+        in_tail = state if state.recurred else replace(
+            state, recurred=True, salvage=None)
+        p_death_recurred, _ = self.annual_event_probabilities(in_tail)
+        alive_free = 0.0 if state.recurred else 1.0
+        alive_recurred = 1.0 if state.recurred else 0.0
+        alive_year = float(self.config.reward["alive_year"])
+        free_year = float(self.config.reward["recurrence_free_year"])
+        horizon = int(self.config.horizon_years)
+        total = 0.0
+        for offset in range(1, tail + 1):
+            # Same order as _advance_followup: death first, then recurrence
+            # among survivors, then the year's reward on the resulting status.
+            survivors_free = alive_free * (1.0 - p_death)
+            new_free = survivors_free * (1.0 - p_recurrence)
+            new_recurred = (survivors_free * p_recurrence
+                            + alive_recurred * (1.0 - p_death_recurred))
+            raw = new_free * (alive_year + free_year) + new_recurred * alive_year
+            total += self.config.normalized(raw) * self.config.discount_factor(
+                horizon + offset)
+            alive_free, alive_recurred = new_free, new_recurred
+        return total
 
     def _chemo_response(
         self,

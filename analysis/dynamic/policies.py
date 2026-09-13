@@ -50,6 +50,11 @@ class DynamicNccnPolicy:
                 preferred = "local" if state.surgery == "BCS" else "regional"
             else:
                 preferred = "none"
+        elif state.phase == "salvage":
+            # Guideline care after recurrence is systemic therapy for every
+            # subtype (endocrine-based, HER2-directed or cytotoxic); the
+            # simplified rule keeps only the decision to treat.
+            preferred = "systemic"
         else:
             preferred = legal[0]
         return preferred if preferred in legal else legal[0]

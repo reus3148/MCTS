@@ -58,6 +58,8 @@ def simulate_episode(
         "endocrine": state.endocrine,
         "radiation": state.radiation,
         "response": state.response,
+        "salvage": state.salvage,
+        "recurrence_year": state.recurrence_year,
         "terminal_year": state.year,
     }
     return result, trace

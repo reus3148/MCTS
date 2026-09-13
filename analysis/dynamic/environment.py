@@ -42,6 +42,16 @@ class DynamicBreastCancerEnvironment:
     def is_terminal(state: DynamicState) -> bool:
         return state.phase == "terminal"
 
+    @property
+    def salvage_enabled(self) -> bool:
+        """Whether a recurrence opens a decision (v0.6) or is only an event (v0.5).
+
+        Keyed on the config so ``dynamic_v0_5.json`` reproduces every earlier
+        report byte-for-byte: with no ``salvage`` block the phase is never
+        entered, no extra random draw is made, and nothing downstream changes.
+        """
+        return "salvage" in self.config.hazard_multipliers
+
     def legal_actions(self, state: DynamicState) -> tuple[Action, ...]:
         if self.is_terminal(state):
             return ()
@@ -95,6 +105,10 @@ class DynamicBreastCancerEnvironment:
             return tuple(actions)
         if state.phase == "followup":
             return ("advance_year",)
+        if state.phase == "salvage":
+            # Both policies see the same set; no toxicity guardrail here, so
+            # neither is denied the treatment by an earlier event.
+            return tuple(self.config.hazard_multipliers["salvage"].keys())
         raise ValueError(f"unknown phase: {state.phase!r}")
 
     def step(
@@ -185,6 +199,19 @@ class DynamicBreastCancerEnvironment:
         if state.phase == "followup":
             return self._advance_followup(state, rng)
 
+        if state.phase == "salvage":
+            toxicity = self._sample_toxicity("salvage", action, rng)
+            next_state = replace(
+                state,
+                phase="followup",
+                salvage=action,
+                toxicity_count=state.toxicity_count + int(toxicity),
+            )
+            return next_state, self._treatment_reward("salvage", action, toxicity), {
+                "event": "salvage_selected",
+                "toxicity": toxicity,
+            }
+
         raise ValueError(f"cannot step from phase {state.phase!r}")
 
     def static_plan(self, state: DynamicState) -> Plan:
@@ -249,6 +276,9 @@ class DynamicBreastCancerEnvironment:
             death_hazard *= float(
                 self.config.hazard_multipliers["death_after_recurrence"]
             )
+            if state.salvage is not None:
+                death_hazard *= float(
+                    self.config.hazard_multipliers["salvage"][state.salvage]["death"])
             recurrence_hazard = 0.0
 
         death_probability = min(1.0 - math.exp(-death_hazard), 0.95)
@@ -292,11 +322,19 @@ class DynamicBreastCancerEnvironment:
             if year >= int(self.config.horizon_years)
             else "followup"
         )
+        # v0.6: a recurrence with follow-up years still to play opens a
+        # decision instead of being only an event. A recurrence in the final
+        # year has nothing left to treat within the horizon, so it stays an
+        # event - the horizon artefact this creates is measured, not hidden
+        # (reports/decision-points-v1.8).
+        if recurrence_now and next_phase == "followup" and self.salvage_enabled:
+            next_phase = "salvage"
         next_state = replace(
             state,
             phase=next_phase,
             year=year,
             recurred=recurred,
+            recurrence_year=year if recurrence_now else state.recurrence_year,
         )
         discounted = self.config.normalized(raw_reward) * (
             self.config.discount_factor(year)

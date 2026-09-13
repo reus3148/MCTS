@@ -1,0 +1,21 @@
+{
+  "run_date": "2026-09-13",
+  "generated_at": "2026-09-13T14:50:55+09:00",
+  "git_commit_before_run": "c78e55d01940a6570a4271a9bd70d8174324b106",
+  "inputs": {
+    "data": {
+      "path": "data/processed/patients_with_nccn.csv",
+      "sha256": "23e76e584ebb3a308583e1f278df4b4befba19f7d6175361483149f5b17cab8f"
+    },
+    "assumptions_v05": {
+      "path": "configs/dynamic_v0_5.json",
+      "sha256": "dc943e895fa2cc3ade349721c39ae7f0bdb3e0d69ecda57ea5fa9f7e4c3e888b"
+    },
+    "assumptions_v06": {
+      "path": "configs/dynamic_v0_6.json",
+      "sha256": "df8132b4b16e7847e5f9f20d4586265b8192a2ab94f71222cf0d537ab3b15734"
+    }
+  },
+  "entry_point": "analysis/41_run_decision_points.py",
+  "base_seed": 20260720
+}

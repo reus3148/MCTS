@@ -40,6 +40,11 @@ MCTS-ONC (Monte Carlo Tree Search for Oncology) — 경북대학교 의과대학
 - **순차적 방법을 쓸 만큼 적응할 자리가 있는지 확인한다**(v1.7). 응답을 계획자에게서
   완전히 가려도 격차가 −0.0004(z = −0.29)만 움직였다 — 응답이 에피소드의 20.8%에서
   한 번만 나오기 때문이다. **적응할 자리가 없으면 MCTS는 정적 최적화기와 같다.**
+- **새 채널을 열면 두 진단을 먼저 본다**(v1.8): (a) **가이드라인 정책이 그 채널로 손해를
+  보는가** — 본다면 v1.5와 같은 비대칭이다; (b) **탐색 정책의 선택이 지평 잔여에
+  단조인가** — 그렇다면 값은 지평 인공물이다. v0.6의 구제치료는 둘 다 걸렸다
+  (NCCN −0.0010, z = −13.7; 거절률 62% → 100%). 자리는 **자주 열리고, 선택이 갈리고,
+  지평이 결과를 자르지 않아야** 자리다.
 - 지표가 좋아지면 먼저 "탐색이 시뮬레이터의 허점을 이용한 것 아닌가"를 의심한다.
   MCTS는 시뮬레이터의 목적함수를 직접 최적화하므로, 가정이 틀리면 잘 탐색할수록 더 틀린다.
 - 결과를 좋게 포장하는 것보다 **한계를 정확히 적는 것이 이 연구의 기여**다.
@@ -101,6 +106,7 @@ analysis/
 ├── 12_*.py          # 탐색 예산 스케일링 진단 v0.4
 ├── 37~38_*.py       # GENIE BPC 자료 적격성 평가 v1.6
 ├── 39~40_*.py       # 폐루프 적응 분리 v1.7
+├── 41~42_*.py       # 재발 시 결정 지점 v1.8 (v0.6 환경)
 ├── mcts/            # 치료환경·보상모형·UCT 탐색 모듈
 ├── genie/           # GENIE BPC 어댑터 (loader.py·sequences.py)
 ├── causal/          # 프로펜서티·트리밍·IPCW·AIPW
@@ -108,6 +114,7 @@ analysis/
                      #   cohort.py: 10~12 공유 코호트·보상모형·매니페스트
                      #   experiment_utils.py: 테스트 가능한 통계 헬퍼
                      #   blinding.py: 응답 채널을 계획자에게서 가림 (v1.7)
+                     #   salvage.py: 구제 결정 위임·영대조·지평 진단 (v1.8)
 tests/               # 단위 테스트 (py -m unittest discover -s tests -v)
 reports/             # 재현 가능한 기술 리포트 (metrics·manifest·표·figure)
 ```
@@ -130,6 +137,10 @@ reports/             # 재현 가능한 기술 리포트 (metrics·manifest·표
   대상 로직은 `analysis/dynamic/`에 두고 스크립트는 얇게 유지한다. 새 실험은
   `reports/<label>/`에 `metrics.json`·`run_manifest.json`·`tables/`·`README.md`를 함께 낸다.
 - **탐색 예산**: v0.4 진단 이후 기본값은 **1024 이상**(256은 행동 순서를 분해하지 못함).
+- **상태 필드를 추가할 때는 `repr=False`** (v0.6 선례). `CachedMCTSPolicy`가 `repr(state)`로
+  탐색 시드를 만들므로, 새 필드가 repr에 들어가면 v0.2~v1.7이 재현되지 않는다.
+- **팔 이름에 `null`을 쓰지 않는다** — pandas가 CSV에서 문자열 "null"을 결측으로 읽는다.
+  v1.8이 `inert`로 이름을 바꾼 이유다.
 ## 연구 작업의 완료 기준 (Definition of Done — 반드시 지킬 것)
 
 이 프로젝트의 기록은 **그대로 논문이 되어야 한다.** 따라서 실험을 돌린 것만으로는
@@ -180,7 +191,9 @@ reports/             # 재현 가능한 기술 리포트 (metrics·manifest·표
 
 ## 실험 설정 규약
 
-- **환경 설정**: 새 실험은 `configs/dynamic_v0_5.json`을 쓴다. `dynamic_poc_v0_2.json`은
+- **환경 설정**: 새 실험은 `configs/dynamic_v0_5.json`을 쓴다. `dynamic_v0_6.json`은
+  재발 시 구제 결정을 여는 실험용인데 **구제 파라미터가 순손실로 확인**됐으므로(v1.8)
+  지평 처리 전에는 인용하지 않는다. `dynamic_poc_v0_2.json`은
   v0.2~v0.4 리포트의 매니페스트 해시를 보존하기 위해 그대로 둔다(그 결과들은 매니페스트의
   `git_commit_before_run`으로 재현). 두 파일의 차이는 응답 채널 중립화 스위치와 명시적
   timing·할인율 선언이다 — `reports/environment-fix-v0.5` 참고.

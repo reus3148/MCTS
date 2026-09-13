@@ -6,7 +6,7 @@ its columns to the same ``PatientProfile`` without changing the environment.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Mapping
 
 import pandas as pd
@@ -98,4 +98,12 @@ class DynamicState:
     year: int = 0
     alive: bool = True
     recurred: bool = False
+    #: v0.6 (reports/decision-points-v1.8): the treatment chosen at the salvage
+    #: decision a recurrence opens, and the year the recurrence happened.
+    #: ``repr=False`` on purpose - ``CachedMCTSPolicy`` seeds each search from
+    #: ``repr(state)``, so hiding the new fields from the repr keeps every
+    #: pre-v0.6 state's seed byte-identical and v0.2-v1.7 reproducible. Equality
+    #: and hashing still include them, so the decision cache stays correct.
+    salvage: str | None = field(default=None, repr=False)
+    recurrence_year: int | None = field(default=None, repr=False)
 

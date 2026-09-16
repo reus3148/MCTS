@@ -1,0 +1,417 @@
+{
+  "run_date": "2026-09-16",
+  "analysis_label": "indifference-v2.0",
+  "question": "Where, if anywhere, does the salvage decision split between treating and declining, does it split between patients or only across recurrence years, and what is the decision point worth to a searcher at that ratio?",
+  "estimand": "Part 1: the expected-utility advantage of systemic over no salvage for each of the 40 patients x 4 recurrence years x 21 hazard ratios under the v0.7 environment and the patient's NCCN plan (deterministic). Part 2: the MCTS-minus-NCCN utility gap over the same 40 patients and 24 seeds with the salvage ratio at the indifference point, MCTS deciding versus deferring.",
+  "scope_warning": "Declared synthetic parameters throughout. A property of our simulator, not a clinical effect.",
+  "prespecified_prediction": {
+    "known_answer": "At the indifference ratio, MCTS's accept rate per recurrence year is within 15 pp of the analytic treat share for that year.",
+    "year_dependence": "MCTS accepts salvage at least 20 pp less often for year-4 than for year-1 recurrences.",
+    "decision_value_small": "C - D > 0 but below 10% of arm C's gap: at an indifference point the options are nearly equal by construction.",
+    "nccn_neutral": "|NCCN(C) - NCCN(v1.9 inert)| < 5% of arm C's gap, seed-paired over the first twelve seeds.",
+    "why": "v1.8 and v1.9 found the salvage decision collapsing to one answer in opposite directions. The analytic map locates the only ratio where it splits; the search is run there to check the searcher against a known answer and to measure what a decision point is worth at indifference."
+  },
+  "design": {
+    "patients": 40,
+    "seeds": 24,
+    "simulations": 1024,
+    "episodes_per_policy": 40,
+    "reward_model": "treatment-neutral (v1.4)",
+    "config": "configs/dynamic_v0_7.json with salvage systemic death ratio = HR*",
+    "ratio_grid": [
+      0.8,
+      0.81,
+      0.82,
+      0.83,
+      0.84,
+      0.85,
+      0.86,
+      0.87,
+      0.88,
+      0.89,
+      0.9,
+      0.91,
+      0.92,
+      0.93,
+      0.94,
+      0.95,
+      0.96,
+      0.97,
+      0.98,
+      0.99,
+      1.0
+    ],
+    "recurrence_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "map_plan": "each patient's simplified NCCN plan",
+    "arms": [
+      {
+        "arm": "decide",
+        "label": "C. v0.7 @ 무차별 위험비 — MCTS가 결정"
+      },
+      {
+        "arm": "defer",
+        "label": "D. v0.7 @ 무차별 위험비 — 규칙에 위임"
+      }
+    ]
+  },
+  "arms": {
+    "decide": {
+      "per_seed_gap": [
+        0.04323646412793081,
+        0.06028223806776234,
+        0.05285303784885831,
+        0.012369529652933142,
+        0.050067984186243475,
+        0.04695715946240098,
+        0.08259560112382558,
+        0.038335310625895236,
+        0.02986711867262204,
+        0.04844145291781499,
+        0.04872534427263031,
+        0.062209917202465714,
+        0.07338551171074803,
+        0.03559507798198802,
+        0.03357110563645627,
+        0.04048030051513374,
+        0.06927735504720811,
+        0.06573212535820838,
+        0.04030346593174339,
+        0.04209835893227054,
+        0.03424410781842213,
+        0.07792658388397555,
+        0.051834183364879216,
+        0.045707800163759416
+      ],
+      "per_seed_mcts": [
+        1.9755302164933313,
+        1.9428788289052534,
+        1.9324067570219008,
+        1.9004758530744255,
+        1.919701501613357,
+        1.9228466232079895,
+        1.9548798139094683,
+        1.8967366952746005,
+        1.9040781224177448,
+        1.9403334981189364,
+        1.9383840846341347,
+        1.9422122918547262,
+        1.9855529652655626,
+        1.9174283699949473,
+        1.9157009108957908,
+        1.9434540344537012,
+        1.9544789436445122,
+        1.958521855524154,
+        1.9251035690138452,
+        1.9510350165076367,
+        1.9089035450465395,
+        1.9747799683187601,
+        1.939606678947278,
+        1.9487038356597324
+      ],
+      "per_seed_nccn": [
+        1.9322937523654005,
+        1.882596590837491,
+        1.8795537191730425,
+        1.8881063234214923,
+        1.8696335174271135,
+        1.8758894637455885,
+        1.8722842127856427,
+        1.8584013846487053,
+        1.8742110037451227,
+        1.8918920452011214,
+        1.8896587403615044,
+        1.8800023746522605,
+        1.9121674535548145,
+        1.8818332920129592,
+        1.8821298052593345,
+        1.9029737339385675,
+        1.8852015885973041,
+        1.8927897301659455,
+        1.8848001030821018,
+        1.9089366575753661,
+        1.8746594372281173,
+        1.8968533844347846,
+        1.8877724955823987,
+        1.902996035495973
+      ],
+      "utility_gap": 0.04942071393775732,
+      "standard_error": 0.003371421943774058,
+      "mcts_utility": 1.9372389158249301,
+      "nccn_utility": 1.887818201887173,
+      "mcts_recurrence_pct": 9.0234375,
+      "mcts_salvage_decisions": 2877,
+      "mcts_episodes_with_adaptation_pct": 37.84375,
+      "label": "C. v0.7 @ 무차별 위험비 — MCTS가 결정"
+    },
+    "defer": {
+      "per_seed_gap": [
+        0.04913392589679555,
+        0.06505519428319206,
+        0.0317003312468096,
+        0.025682872401201484,
+        0.0467364877821288,
+        0.057688325051729716,
+        0.06961489461842452,
+        0.025178181956317047,
+        0.007900142175932157,
+        0.05549258811829705,
+        0.057664116618572736,
+        0.02862294383749786,
+        0.061679240349663766,
+        0.05928689231475692,
+        0.05381369588449192,
+        0.0390975312092019,
+        0.09263200010576433,
+        0.07437666417862876,
+        0.07086756266279504,
+        0.0423173642418877,
+        0.03996371413312794,
+        0.05388630410639772,
+        0.03475767084553194,
+        0.03833682081097334
+      ],
+      "per_seed_mcts": [
+        1.981427678262196,
+        1.9476517851206832,
+        1.911254050419852,
+        1.9137891958226938,
+        1.9163700052092423,
+        1.9335777887973182,
+        1.9418991074040672,
+        1.8835795666050223,
+        1.8821111459210549,
+        1.9473846333194185,
+        1.9473228569800771,
+        1.9086253184897584,
+        1.9738466939044783,
+        1.9411201843277162,
+        1.9359435011438264,
+        1.9420712651477694,
+        1.9778335887030685,
+        1.9671663943445743,
+        1.9556676657448968,
+        1.9512540218172538,
+        1.9146231513612453,
+        1.9507396885411823,
+        1.9225301664279306,
+        1.9413328563069463
+      ],
+      "per_seed_nccn": [
+        1.9322937523654005,
+        1.882596590837491,
+        1.8795537191730425,
+        1.8881063234214923,
+        1.8696335174271135,
+        1.8758894637455885,
+        1.8722842127856427,
+        1.8584013846487053,
+        1.8742110037451227,
+        1.8918920452011214,
+        1.8896587403615044,
+        1.8800023746522605,
+        1.9121674535548145,
+        1.8818332920129592,
+        1.8821298052593345,
+        1.9029737339385675,
+        1.8852015885973041,
+        1.8927897301659455,
+        1.8848001030821018,
+        1.9089366575753661,
+        1.8746594372281173,
+        1.8968533844347846,
+        1.8877724955823987,
+        1.902996035495973
+      ],
+      "utility_gap": 0.04922856103458833,
+      "standard_error": 0.0038717373312082545,
+      "mcts_utility": 1.9370467629217611,
+      "nccn_utility": 1.887818201887173,
+      "mcts_recurrence_pct": 9.09375,
+      "mcts_salvage_decisions": 2893,
+      "mcts_episodes_with_adaptation_pct": 40.026041666666664,
+      "label": "D. v0.7 @ 무차별 위험비 — 규칙에 위임"
+    }
+  },
+  "action_mix": {
+    "decide": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 66.771,
+          "neoadjuvant": 33.229
+        },
+        "surgery": {
+          "BCS": 50.523,
+          "MAST": 49.477
+        },
+        "chemo": {
+          "none": 46.174,
+          "intensified": 39.615,
+          "standard": 14.211
+        },
+        "endocrine": {
+          "none": 62.466,
+          "extended": 19.029,
+          "standard": 18.505
+        },
+        "radiation": {
+          "none": 55.646,
+          "regional": 25.232,
+          "local": 19.122
+        },
+        "salvage": {
+          "None": 92.508,
+          "systemic": 3.961,
+          "none": 3.531
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.362,
+          "regional": 13.138
+        },
+        "salvage": {
+          "None": 90.617,
+          "systemic": 9.383
+        }
+      }
+    },
+    "defer": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 64.479,
+          "neoadjuvant": 35.521
+        },
+        "surgery": {
+          "MAST": 50.786,
+          "BCS": 49.214
+        },
+        "chemo": {
+          "none": 43.831,
+          "intensified": 41.82,
+          "standard": 14.349
+        },
+        "endocrine": {
+          "none": 62.682,
+          "extended": 20.031,
+          "standard": 17.286
+        },
+        "radiation": {
+          "none": 57.789,
+          "regional": 23.987,
+          "local": 18.224
+        },
+        "salvage": {
+          "None": 92.466,
+          "systemic": 7.534
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.362,
+          "regional": 13.138
+        },
+        "salvage": {
+          "None": 90.617,
+          "systemic": 9.383
+        }
+      }
+    }
+  },
+  "verdict": {
+    "indifference_ratio": 0.96,
+    "indifference_ratio_by_patient": {
+      "min": 0.95,
+      "median": 0.96,
+      "max": 0.96,
+      "spread": 0.010000000000000009
+    },
+    "treat_share_at_ratio_star": 0.81875,
+    "transition_band": {
+      "last_ratio_all_treat": 0.94,
+      "first_ratio_none_treat": 0.98
+    },
+    "oracle_treat_pct_by_year": {
+      "1": 100.0,
+      "2": 92.5,
+      "3": 82.5,
+      "4": 52.5
+    },
+    "mcts_accept_pct_by_year": {
+      "1.0": 56.475,
+      "2.0": 53.659,
+      "3.0": 51.153,
+      "4.0": 48.936
+    },
+    "known_answer_max_gap_pp": 43.52517985611511,
+    "known_answer_prediction_met": false,
+    "year_dependence_pp": 7.538649931118933,
+    "year_dependence_prediction_met": false,
+    "gap_decide": 0.04942071393775732,
+    "gap_defer": 0.04922856103458833,
+    "decide_vs_defer": {
+      "difference": 0.00019215290316899428,
+      "standard_error": 0.0034342836909180448,
+      "z": 0.05595137748146496,
+      "seeds_positive": 11,
+      "seeds": 24
+    },
+    "value_of_decision_point": 0.00019215290316899428,
+    "value_of_decision_point_relative": 0.0038881045589709675,
+    "minimum_detectable_difference": 0.00962143842328244,
+    "minimum_detectable_difference_relative": 0.19468432680677406,
+    "decision_value_prediction_met": true,
+    "nccn_vs_v1_9_inert": {
+      "difference": 0.00010930510169863498,
+      "standard_error": 0.0002272653018698697,
+      "z": 0.48095816122965496,
+      "seeds_positive": 5,
+      "seeds": 12
+    },
+    "nccn_neutral_prediction_met": true,
+    "patient_accept_sd_pct": 8.76476917795185,
+    "patients_with_10plus_decisions": 39,
+    "mcts_salvage_mix_decide": {
+      "None": 92.508,
+      "systemic": 3.961,
+      "none": 3.531
+    },
+    "nccn_identical_decide_vs_defer": true
+  }
+}

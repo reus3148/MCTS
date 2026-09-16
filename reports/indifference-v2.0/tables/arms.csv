@@ -1,0 +1,3 @@
+arm,label,utility_gap,standard_error,mcts_utility,nccn_utility,mcts_recurrence_pct,mcts_salvage_decisions,mcts_episodes_with_adaptation_pct
+decide,C. v0.7 @ 무차별 위험비 — MCTS가 결정,0.04942071393775732,0.003371421943774058,1.9372389158249301,1.887818201887173,9.0234375,2877,37.84375
+defer,D. v0.7 @ 무차별 위험비 — 규칙에 위임,0.04922856103458833,0.0038717373312082545,1.9370467629217611,1.887818201887173,9.09375,2893,40.026041666666664

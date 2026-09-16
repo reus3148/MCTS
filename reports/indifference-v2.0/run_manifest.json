@@ -1,0 +1,18 @@
+{
+  "run_date": "2026-09-16",
+  "generated_at": "2026-09-17T00:27:12+09:00",
+  "git_commit_before_run": "76349b21aa48119304bb54029b5a8dd3cc56ecde",
+  "inputs": {
+    "data": {
+      "path": "data/processed/patients_with_nccn.csv",
+      "sha256": "23e76e584ebb3a308583e1f278df4b4befba19f7d6175361483149f5b17cab8f"
+    },
+    "assumptions_v07": {
+      "path": "configs/dynamic_v0_7.json",
+      "sha256": "93d797e003d465dc61fdb0a4da9a8431df5e4bbb9a826600e4b70ee72ac23385"
+    }
+  },
+  "entry_point": "analysis/45_run_indifference.py",
+  "base_seed": 20260720,
+  "salvage_death_ratio_used": 0.96
+}

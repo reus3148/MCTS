@@ -1,0 +1,870 @@
+{
+  "run_date": "2026-09-26",
+  "analysis_label": "benefit-tipping-v2.1",
+  "question": "How much of the randomised standard-treatment benefit would have to be declared before the MCTS-minus-NCCN gap reverses?",
+  "estimand": "MCTS-minus-NCCN utility gap over the same 40 patients and 12 seeds as v1.5, under the v0.5 environment with the declared benefit of standard chemotherapy, standard endocrine therapy and local radiotherapy raised to a fraction 'strength' of a randomised-evidence endpoint, the ladder keeping its declared increments. Reported as a curve in strength.",
+  "scope_warning": "The endpoint hazard ratios are recorded from memory and flagged for verification against the primary meta-analyses. The tipping point is reported both as a fraction of that endpoint and as the implied hazard ratio, so a corrected endpoint rescales the axis rather than overturning the shape. Not a clinical effect estimate.",
+  "prespecified_prediction": {
+    "monotone": "The gap falls with strength at every adjacent pair: NCCN prescribes the three standard treatments and MCTS declines them.",
+    "tipping_point": "The gap crosses zero in [0.4, 0.75]. The preview's plan-level crossing is 0.50; a searcher should need a little more, because it can keep whichever channels pay.",
+    "nccn_moves_more": "From strength 0 to 1, NCCN's utility rises by more than MCTS's - the gap closes because the guideline stops being penalised (v1.4, v1.5 pattern).",
+    "searcher_stays_flexible": "At strength 1 the gap is negative but smaller in magnitude than the preview's mean plan-level advantage, because MCTS can accept the channels that pay and decline the rest.",
+    "why": "v1.5 found standard treatment declared as pure cost and 41% of the gap coming from MCTS declining it. Choosing the real numbers is a clinical judgement; this run asks instead how much the conclusion depends on them."
+  },
+  "design": {
+    "patients": 40,
+    "seeds": 12,
+    "simulations": 1024,
+    "episodes_per_policy": 40,
+    "reward_model": "treatment-neutral (v1.4)",
+    "config": "configs/dynamic_v0_5.json with the standard-treatment ladders scaled",
+    "strengths": [
+      0.0,
+      0.25,
+      0.4,
+      0.5,
+      0.6,
+      0.75,
+      1.0
+    ],
+    "full_benefit_endpoint": {
+      "chemo": {
+        "death": 0.8,
+        "recurrence": 0.75
+      },
+      "endocrine": {
+        "death": 0.75,
+        "recurrence": 0.6
+      },
+      "radiation": {
+        "death": 0.85,
+        "recurrence": 0.5
+      }
+    },
+    "preview_grid": [
+      0.0,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      1.0
+    ]
+  },
+  "arms": {
+    "s000": {
+      "per_seed_gap": [
+        0.011221666666666907,
+        0.02230583333333358,
+        0.018314166666666853,
+        0.022985833333333372,
+        0.022038333333333382,
+        0.021894999999999887,
+        0.023667500000000175,
+        0.01373833333333363,
+        0.02649833333333329,
+        0.01847333333333334,
+        0.02264166666666667,
+        0.01444583333333338
+      ],
+      "per_seed_mcts": [
+        0.829195,
+        0.8255716666666668,
+        0.8268083333333334,
+        0.8268833333333333,
+        0.8260166666666666,
+        0.8233508333333333,
+        0.82603,
+        0.8124716666666668,
+        0.8266724999999999,
+        0.8215116666666666,
+        0.8292624999999999,
+        0.8165908333333334
+      ],
+      "per_seed_nccn": [
+        0.8179733333333331,
+        0.8032658333333332,
+        0.8084941666666665,
+        0.8038974999999999,
+        0.8039783333333332,
+        0.8014558333333334,
+        0.8023624999999999,
+        0.7987333333333332,
+        0.8001741666666666,
+        0.8030383333333333,
+        0.8066208333333332,
+        0.802145
+      ],
+      "utility_gap": 0.01985215277777787,
+      "standard_error": 0.0013389899048387888,
+      "mcts_utility": 0.8241970833333333,
+      "nccn_utility": 0.8043449305555553,
+      "mcts_accept_pct": {
+        "chemo": 31.130208333333332,
+        "endocrine": 29.609375,
+        "radiation": 27.854166666666668
+      },
+      "strength": 0.0
+    },
+    "s250": {
+      "per_seed_gap": [
+        -0.007835000000000258,
+        -0.00023333333333330764,
+        -0.0011225000000001373,
+        0.0075508333333333955,
+        0.006492499999999901,
+        0.006158333333333266,
+        0.007487500000000202,
+        0.010102500000000014,
+        0.01385666666666674,
+        0.002623333333333311,
+        0.0073824999999999585,
+        0.0066950000000001175
+      ],
+      "per_seed_mcts": [
+        0.8266383333333331,
+        0.8226991666666666,
+        0.8274966666666664,
+        0.8295733333333333,
+        0.8301374999999999,
+        0.8260724999999999,
+        0.8291000000000001,
+        0.8287108333333333,
+        0.8291975,
+        0.8225783333333332,
+        0.8318783333333333,
+        0.8264233333333333
+      ],
+      "per_seed_nccn": [
+        0.8344733333333334,
+        0.8229325,
+        0.8286191666666666,
+        0.8220224999999999,
+        0.823645,
+        0.8199141666666666,
+        0.8216124999999999,
+        0.8186083333333333,
+        0.8153408333333333,
+        0.8199549999999999,
+        0.8244958333333333,
+        0.8197283333333332
+      ],
+      "utility_gap": 0.0049298611111111,
+      "standard_error": 0.0016617091446747207,
+      "mcts_utility": 0.8275421527777778,
+      "nccn_utility": 0.8226122916666666,
+      "mcts_accept_pct": {
+        "chemo": 45.057291666666664,
+        "endocrine": 38.51041666666667,
+        "radiation": 40.09375
+      },
+      "strength": 0.25
+    },
+    "s400": {
+      "per_seed_gap": [
+        -0.010684166666666828,
+        0.008473333333333333,
+        -0.0003166666666667428,
+        -0.003677499999999778,
+        0.002705833333333185,
+        0.0023816666666668374,
+        0.004919166666666586,
+        0.0009100000000000774,
+        0.005357500000000015,
+        0.004120833333333573,
+        0.007983333333333342,
+        -0.002291666666666692
+      ],
+      "per_seed_mcts": [
+        0.8305391666666665,
+        0.8396141666666666,
+        0.8378024999999999,
+        0.8281366666666667,
+        0.8349341666666665,
+        0.8317125000000001,
+        0.8380733333333332,
+        0.827685,
+        0.832865,
+        0.8331591666666667,
+        0.8411874999999999,
+        0.8251033333333332
+      ],
+      "per_seed_nccn": [
+        0.8412233333333333,
+        0.8311408333333332,
+        0.8381191666666666,
+        0.8318141666666665,
+        0.8322283333333333,
+        0.8293308333333332,
+        0.8331541666666666,
+        0.8267749999999999,
+        0.8275075,
+        0.8290383333333331,
+        0.8332041666666665,
+        0.8273949999999999
+      ],
+      "utility_gap": 0.0016568055555555756,
+      "standard_error": 0.001555349066945334,
+      "mcts_utility": 0.8334010416666665,
+      "nccn_utility": 0.8317442361111111,
+      "mcts_accept_pct": {
+        "chemo": 45.61458333333333,
+        "endocrine": 40.869791666666664,
+        "radiation": 51.744791666666664
+      },
+      "strength": 0.4
+    },
+    "s500": {
+      "per_seed_gap": [
+        -0.002230833333333293,
+        -0.010578333333333134,
+        0.0010291666666667476,
+        -0.008208333333333373,
+        -0.00302250000000015,
+        0.0010024999999999062,
+        -0.0045916666666665495,
+        0.0013308333333332811,
+        -0.0026133333333334674,
+        -0.0027574999999998573,
+        0.004090000000000149,
+        0.0026250000000000995
+      ],
+      "per_seed_mcts": [
+        0.8447841666666666,
+        0.8291875000000001,
+        0.8443149999999999,
+        0.8304808333333333,
+        0.8359558333333332,
+        0.8348333333333333,
+        0.8357291666666666,
+        0.8337308333333333,
+        0.8309774999999998,
+        0.8359475,
+        0.8426275000000001,
+        0.8363949999999999
+      ],
+      "per_seed_nccn": [
+        0.8470149999999999,
+        0.8397658333333332,
+        0.8432858333333332,
+        0.8386891666666667,
+        0.8389783333333334,
+        0.8338308333333334,
+        0.8403208333333332,
+        0.8324,
+        0.8335908333333333,
+        0.8387049999999998,
+        0.8385374999999999,
+        0.8337699999999998
+      ],
+      "utility_gap": -0.00199374999999997,
+      "standard_error": 0.0012572826634919853,
+      "mcts_utility": 0.8362470138888889,
+      "nccn_utility": 0.8382407638888888,
+      "mcts_accept_pct": {
+        "chemo": 54.557291666666664,
+        "endocrine": 42.40625,
+        "radiation": 53.01041666666667
+      },
+      "strength": 0.5
+    },
+    "s600": {
+      "per_seed_gap": [
+        -0.008339166666666786,
+        -0.011320833333333113,
+        -0.007491666666666674,
+        0.0018724999999999437,
+        -0.005718333333333492,
+        -0.0075075,
+        -0.0019516666666665738,
+        -0.007268333333333321,
+        -0.002627499999999894,
+        0.0022083333333332567,
+        -0.004756666666666631,
+        -0.003275000000000028
+      ],
+      "per_seed_mcts": [
+        0.8430508333333332,
+        0.8352783333333335,
+        0.8413774999999998,
+        0.8447283333333333,
+        0.83751,
+        0.8330733333333333,
+        0.8454525,
+        0.8304233333333333,
+        0.8364633333333333,
+        0.8477466666666666,
+        0.8398641666666666,
+        0.8343699999999998
+      ],
+      "per_seed_nccn": [
+        0.85139,
+        0.8465991666666666,
+        0.8488691666666665,
+        0.8428558333333334,
+        0.8432283333333335,
+        0.8405808333333333,
+        0.8474041666666666,
+        0.8376916666666666,
+        0.8390908333333332,
+        0.8455383333333334,
+        0.8446208333333333,
+        0.8376449999999999
+      ],
+      "utility_gap": -0.004681319444444443,
+      "standard_error": 0.00118446008855146,
+      "mcts_utility": 0.8391115277777778,
+      "nccn_utility": 0.8437928472222223,
+      "mcts_accept_pct": {
+        "chemo": 60.85937500000001,
+        "endocrine": 45.05208333333333,
+        "radiation": 56.114583333333336
+      },
+      "strength": 0.6
+    },
+    "s750": {
+      "per_seed_gap": [
+        -0.01479499999999978,
+        -0.006664166666666804,
+        -0.003822499999999729,
+        -0.0001391666666666902,
+        0.0007891666666666186,
+        -0.013807499999999973,
+        -0.002163333333333184,
+        -0.010984166666666462,
+        -0.01167333333333298,
+        -0.0024966666666664805,
+        -0.004522500000000096,
+        -0.007808333333333306
+      ],
+      "per_seed_mcts": [
+        0.8433866666666667,
+        0.8496849999999998,
+        0.8520466666666667,
+        0.8492166666666666,
+        0.8516424999999999,
+        0.83619,
+        0.8516575,
+        0.8397908333333334,
+        0.8395841666666668,
+        0.8515,
+        0.8518483333333332,
+        0.8378366666666667
+      ],
+      "per_seed_nccn": [
+        0.8581816666666665,
+        0.8563491666666666,
+        0.8558691666666665,
+        0.8493558333333333,
+        0.8508533333333332,
+        0.8499975,
+        0.8538208333333331,
+        0.8507749999999998,
+        0.8512574999999998,
+        0.8539966666666665,
+        0.8563708333333333,
+        0.845645
+      ],
+      "utility_gap": -0.006507291666666572,
+      "standard_error": 0.001533269377663354,
+      "mcts_utility": 0.8461987499999998,
+      "nccn_utility": 0.8527060416666665,
+      "mcts_accept_pct": {
+        "chemo": 63.854166666666664,
+        "endocrine": 46.552083333333336,
+        "radiation": 59.505208333333336
+      },
+      "strength": 0.75
+    },
+    "s1000": {
+      "per_seed_gap": [
+        -0.00797749999999997,
+        -0.004260833333333269,
+        -0.001615000000000033,
+        -0.010362500000000052,
+        -0.006678333333333342,
+        -0.011941666666666628,
+        -0.0004266666666666863,
+        -0.010389166666666672,
+        -0.008680833333333138,
+        -0.007903333333333595,
+        -0.0013566666666665617,
+        -0.001499166666666718
+      ],
+      "per_seed_mcts": [
+        0.8607875,
+        0.8621716666666666,
+        0.8670041666666666,
+        0.8527016666666665,
+        0.8577999999999999,
+        0.8532225,
+        0.8645191666666665,
+        0.8538858333333332,
+        0.857035,
+        0.8568016666666665,
+        0.8666391666666666,
+        0.8575624999999999
+      ],
+      "per_seed_nccn": [
+        0.868765,
+        0.8664324999999998,
+        0.8686191666666666,
+        0.8630641666666665,
+        0.8644783333333332,
+        0.8651641666666666,
+        0.8649458333333332,
+        0.8642749999999999,
+        0.8657158333333331,
+        0.8647050000000001,
+        0.8679958333333332,
+        0.8590616666666666
+      ],
+      "utility_gap": -0.0060909722222222224,
+      "standard_error": 0.001180053557113883,
+      "mcts_utility": 0.8591775694444443,
+      "nccn_utility": 0.8652685416666667,
+      "mcts_accept_pct": {
+        "chemo": 71.80208333333333,
+        "endocrine": 48.828125,
+        "radiation": 67.94270833333333
+      },
+      "strength": 1.0
+    }
+  },
+  "action_mix": {
+    "s000": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 79.167,
+          "neoadjuvant": 20.833
+        },
+        "surgery": {
+          "MAST": 52.635,
+          "BCS": 47.365
+        },
+        "chemo": {
+          "none": 68.87,
+          "standard": 18.875,
+          "intensified": 12.255
+        },
+        "endocrine": {
+          "none": 70.391,
+          "standard": 16.542,
+          "extended": 13.068
+        },
+        "radiation": {
+          "none": 72.146,
+          "regional": 15.016,
+          "local": 12.839
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    },
+    "s250": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 74.583,
+          "neoadjuvant": 25.417
+        },
+        "surgery": {
+          "MAST": 52.099,
+          "BCS": 47.901
+        },
+        "chemo": {
+          "none": 54.943,
+          "standard": 27.615,
+          "intensified": 17.443
+        },
+        "endocrine": {
+          "none": 61.49,
+          "standard": 25.026,
+          "extended": 13.484
+        },
+        "radiation": {
+          "none": 59.906,
+          "regional": 20.443,
+          "local": 19.651
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    },
+    "s400": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 75.833,
+          "neoadjuvant": 24.167
+        },
+        "surgery": {
+          "MAST": 50.13,
+          "BCS": 49.87
+        },
+        "chemo": {
+          "none": 54.385,
+          "standard": 27.094,
+          "intensified": 18.521
+        },
+        "endocrine": {
+          "none": 59.13,
+          "standard": 26.318,
+          "extended": 14.552
+        },
+        "radiation": {
+          "none": 48.255,
+          "regional": 27.38,
+          "local": 24.365
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    },
+    "s500": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 69.167,
+          "neoadjuvant": 30.833
+        },
+        "surgery": {
+          "BCS": 52.474,
+          "MAST": 47.526
+        },
+        "chemo": {
+          "none": 45.443,
+          "standard": 36.052,
+          "intensified": 18.505
+        },
+        "endocrine": {
+          "none": 57.594,
+          "standard": 26.094,
+          "extended": 16.312
+        },
+        "radiation": {
+          "none": 46.99,
+          "regional": 29.0,
+          "local": 24.01
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    },
+    "s600": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 66.25,
+          "neoadjuvant": 33.75
+        },
+        "surgery": {
+          "BCS": 54.807,
+          "MAST": 45.193
+        },
+        "chemo": {
+          "standard": 39.599,
+          "none": 39.141,
+          "intensified": 21.26
+        },
+        "endocrine": {
+          "none": 54.948,
+          "standard": 28.021,
+          "extended": 17.031
+        },
+        "radiation": {
+          "none": 43.885,
+          "regional": 31.234,
+          "local": 24.88
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    },
+    "s750": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 67.292,
+          "neoadjuvant": 32.708
+        },
+        "surgery": {
+          "BCS": 53.943,
+          "MAST": 46.057
+        },
+        "chemo": {
+          "standard": 43.0,
+          "none": 36.146,
+          "intensified": 20.854
+        },
+        "endocrine": {
+          "none": 53.448,
+          "standard": 28.531,
+          "extended": 18.021
+        },
+        "radiation": {
+          "none": 40.495,
+          "regional": 31.656,
+          "local": 27.849
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    },
+    "s1000": {
+      "MCTS": {
+        "timing": {
+          "surgery_first": 63.75,
+          "neoadjuvant": 36.25
+        },
+        "surgery": {
+          "BCS": 58.099,
+          "MAST": 41.901
+        },
+        "chemo": {
+          "standard": 47.214,
+          "none": 28.198,
+          "intensified": 24.589
+        },
+        "endocrine": {
+          "none": 51.172,
+          "standard": 31.964,
+          "extended": 16.865
+        },
+        "radiation": {
+          "local": 34.63,
+          "regional": 33.312,
+          "none": 32.057
+        }
+      },
+      "NCCN": {
+        "timing": {
+          "surgery_first": 100.0
+        },
+        "surgery": {
+          "BCS": 62.5,
+          "MAST": 37.5
+        },
+        "chemo": {
+          "standard": 92.5,
+          "none": 7.5
+        },
+        "endocrine": {
+          "standard": 50.0,
+          "none": 50.0
+        },
+        "radiation": {
+          "local": 62.5,
+          "none": 24.286,
+          "regional": 13.214
+        }
+      }
+    }
+  },
+  "verdict": {
+    "strengths": [
+      0.0,
+      0.25,
+      0.4,
+      0.5,
+      0.6,
+      0.75,
+      1.0
+    ],
+    "gaps": [
+      0.01985215277777787,
+      0.0049298611111111,
+      0.0016568055555555756,
+      -0.00199374999999997,
+      -0.004681319444444443,
+      -0.006507291666666572,
+      -0.0060909722222222224
+    ],
+    "gap_at_zero": 0.01985215277777787,
+    "gap_at_one": -0.0060909722222222224,
+    "reproduces_v1_5_baseline": true,
+    "v1_5_baseline_gap": 0.01985215277777787,
+    "tipping_strength": 0.44538502511033395,
+    "tipping_band": [
+      0.4,
+      0.75
+    ],
+    "implied_hazard_ratios_at_tipping": {
+      "chemo": {
+        "death": 0.9053942487137431,
+        "recurrence": 0.879739632838743
+      },
+      "endocrine": {
+        "death": 0.879739632838743,
+        "recurrence": 0.7965112039377379
+      },
+      "radiation": {
+        "death": 0.9301741079613859,
+        "recurrence": 0.7343882976179841
+      }
+    },
+    "monotone_prediction_met": false,
+    "max_increase_between_adjacent": 0.00041631944444434944,
+    "tipping_prediction_met": true,
+    "utility_change_zero_to_one": {
+      "mcts": 0.03498048611111104,
+      "nccn": 0.06092361111111133
+    },
+    "nccn_moves_more_prediction_met": true,
+    "preview_mean_advantage_at_one": 0.027263056874939306,
+    "searcher_flexible_prediction_met": true,
+    "preview_crossing": {
+      "min": 0.2,
+      "median": 0.5,
+      "max": 1.0,
+      "spread": 0.8,
+      "patients_without_crossing": 1
+    },
+    "mcts_accept_pct_at_zero": {
+      "chemo": 31.130208333333332,
+      "endocrine": 29.609375,
+      "radiation": 27.854166666666668
+    },
+    "mcts_accept_pct_at_one": {
+      "chemo": 71.80208333333333,
+      "endocrine": 48.828125,
+      "radiation": 67.94270833333333
+    },
+    "minimum_detectable_difference": 0.0048941398303752786,
+    "zero_vs_one_paired": {
+      "difference": -0.025943125000000095,
+      "standard_error": 0.0017469180657912551,
+      "z": -14.85079667331125,
+      "seeds_positive": 0
+    }
+  }
+}

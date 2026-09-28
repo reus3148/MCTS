@@ -1,0 +1,5 @@
+subtype,patients,median_crossing
+HR+/HER2-,10,0.4
+HR+/HER2+,10,0.42500000000000004
+HR-/HER2+,10,0.625
+TNBC,9,0.65

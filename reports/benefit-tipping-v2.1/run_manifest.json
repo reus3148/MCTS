@@ -1,0 +1,17 @@
+{
+  "run_date": "2026-09-26",
+  "generated_at": "2026-09-29T00:04:55+09:00",
+  "git_commit_before_run": "b42bb5c18852e0d8d1546e55e21cd6f392b33727",
+  "inputs": {
+    "data": {
+      "path": "data/processed/patients_with_nccn.csv",
+      "sha256": "23e76e584ebb3a308583e1f278df4b4befba19f7d6175361483149f5b17cab8f"
+    },
+    "assumptions_v05": {
+      "path": "configs/dynamic_v0_5.json",
+      "sha256": "dc943e895fa2cc3ade349721c39ae7f0bdb3e0d69ecda57ea5fa9f7e4c3e888b"
+    }
+  },
+  "entry_point": "analysis/47_run_benefit_tipping.py",
+  "base_seed": 20260720
+}

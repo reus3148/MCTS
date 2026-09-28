@@ -1,0 +1,6 @@
+nccn_plan,patients,median_crossing,min_crossing,max_crossing,median_five_year_rfs
+end+rad,3,0.25,0.2,0.25,0.8108912664799173
+che+end,4,0.4,0.4,0.45,0.6775098016835699
+che+end+rad,13,0.4,0.35,0.5,0.7213851794145398
+che+rad,16,0.65,0.55,0.8,0.6809002937674584
+che,3,0.9,0.85,1.0,0.6694844608740049

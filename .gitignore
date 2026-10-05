@@ -18,3 +18,5 @@ data/
 *.docx
 *.xlsx
 *.zip
+*.tar.gz
+*.tgz

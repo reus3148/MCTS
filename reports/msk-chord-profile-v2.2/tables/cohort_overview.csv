@@ -1,0 +1,11 @@
+STAGE_HIGHEST_RECORDED,receptor,patients
+Stage 1-3,HR+/HER2+,467
+Stage 1-3,HR+/HER2-,2898
+Stage 1-3,HR-/HER2+,167
+Stage 1-3,HR-/HER2-,735
+Stage 4,HR+/HER2+,162
+Stage 4,HR+/HER2-,616
+Stage 4,HR-/HER2+,70
+Stage 4,HR-/HER2-,251
+Unknown,HR+/HER2-,1
+Unknown,HR-/HER2-,1

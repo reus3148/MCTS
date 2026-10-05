@@ -1,0 +1,10 @@
+days_surgery_minus_chemo,patients,share,reading
+< -365,156,0.062225767850019945,chemo long after surgery
+-365..-90,106,0.04228161148783406,chemo after surgery
+-90..-1,1031,0.41124850418827286,adjuvant (surgery first)
+0,2,0.0007977662544874351,same day
+1..30,37,0.014758675708017551,very short gap
+31..90,58,0.023135221380135622,neoadjuvant (short)
+91..180,780,0.3111288392500997,neoadjuvant (typical)
+181..365,168,0.06701236537694455,surgery long after chemo
+> 365,169,0.06741124850418827,surgery much later - not a course

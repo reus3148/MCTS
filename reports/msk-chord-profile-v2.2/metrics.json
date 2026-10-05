@@ -1,0 +1,148 @@
+{
+  "run_date": "2026-10-05",
+  "analysis_label": "msk-chord-profile-v2.2",
+  "question": "How many adaptation opportunities does real breast-cancer care contain, does treatment change after a progression call, and which of the environment's five action axes can MSK-CHORD see?",
+  "estimand": "None. This is a descriptive data-adequacy assessment of the breast-cancer slice of MSK-CHORD: counts of de-duplicated progression calls per patient, the unadjusted association between a progression call and a subsequent systemic treatment start, within-patient ECOG movement, and coverage of the environment's action axes.",
+  "scope_warning": "Descriptive only. Switch rates are unadjusted and confounded by indication; they say recorded care contains adaptation, not that adaptation caused anything. The cohort is conditioned on surviving from diagnosis to sequencing, so OS on this cohort must not be fed to Kaplan-Meier without left-truncation handling.",
+  "licence": "CC BY-NC-ND 4.0. NonCommercial and NoDerivatives: neither raw nor patient-level derived tables may be redistributed. This report carries aggregate counts and per-file SHA-256 only. Cite Jee et al., Nature 2024 (PMID 39506116).",
+  "prespecified_prediction": {
+    "adaptation_opportunities": "Median de-duplicated progression calls within 5 years of diagnosis >= 5, and >= 60% of the cohort has >= 2. SCOPING-INFORMED: a raw rows-per-patient median was visible before this was written.",
+    "primary_treatment_follows_signal": "A progressing call is followed by a systemic treatment start within 90 days at >= 1.5x the rate a controlled call is.",
+    "placebo_in_time": "For progressing calls the forward-minus-backward switch-rate gap exceeds the same gap for controlled calls.",
+    "label_ordering_known_answer": "The Indeterminate group's forward switch rate falls between the controlled and progressing rates.",
+    "ecog_is_a_state": "Among patients with >= 2 ECOG measurements inside the horizon, >= 50% record >= 2 distinct values.",
+    "timing_axis_readable": "Among patients with both a surgery and a chemotherapy date, the neoadjuvant share lies in [15%, 45%].",
+    "why": "v1.7 blinded the response channel and the gap moved -0.0004 (z = -0.29) because our environment offers one response signal in 20.8% of episodes. That limitation has stood since v1.7 and no simulator change can settle it: the question is how much adaptation real care contains."
+  },
+  "design": {
+    "release": "MSK-CHORD (MSK, Nature 2024), cBioPortal msk_chord_2024",
+    "cancer_type": "Breast Cancer",
+    "time_origin": "re-anchored at earliest recorded primary diagnosis; the release's own origin is the sequencing date",
+    "horizon_years": 5.0,
+    "dedup_days": 30,
+    "switch_window_days": 90,
+    "dedup_sensitivity": [
+      0,
+      30,
+      90
+    ],
+    "window_sensitivity": [
+      60,
+      90,
+      180
+    ],
+    "os_months_origin": "sequencing date (verified by residual check)",
+    "days_per_month": 30.4375
+  },
+  "verdict": {
+    "cohort": 5368,
+    "anchored": 5366,
+    "horizon_years": 5.0,
+    "days_dx_to_sequencing_median": 441.0,
+    "share_prior_treatment_elsewhere": 0.2306259314456036,
+    "action_axes_total": 5,
+    "action_axes_with_occurrence": 5,
+    "action_axes_with_level": 1,
+    "action_axes_with_partial_level": 2,
+    "axis_coverage_share": {
+      "timing": 0.467026825633383,
+      "surgery": 0.6598360655737705,
+      "chemo": 0.6125186289120715,
+      "endocrine": 0.642511177347243,
+      "radiation": 0.5033532041728763
+    },
+    "neoadjuvant_share": 0.4834463502193857,
+    "neoadjuvant_share_interval_restricted_posthoc": 0.33426406063023534,
+    "neoadjuvant_interval_days": [
+      30,
+      180
+    ],
+    "neoadjuvant_band": [
+      0.15,
+      0.45
+    ],
+    "timing_patients": 2507,
+    "endocrine_years_median": 2.8021902806297057,
+    "endocrine_extended_share": 0.24513413992635455,
+    "chemo_agents_median": 3.0,
+    "opportunities": {
+      "patients": 4090,
+      "cohort": 5368,
+      "share_of_cohort": 0.7619225037257824,
+      "median": 5.0,
+      "mean": 6.8178484107579465,
+      "p25": 2.0,
+      "p75": 10.0,
+      "p90": 15.0,
+      "max": 32,
+      "at_least_two": 0.8515892420537897,
+      "at_least_five": 0.5342298288508558,
+      "progressing_median": 0.0,
+      "progressing_at_least_one": 0.4621026894865526
+    },
+    "opportunity_entry_within_90d_posthoc": {
+      "patients": 1669,
+      "median": 3.0,
+      "at_least_two": 0.6596764529658478
+    },
+    "environment_opportunities": 1,
+    "environment_opportunity_share": 0.208,
+    "dedup_days": 30,
+    "switch_window_days": 90,
+    "calls_scored": 32977,
+    "switch_rate_progressing": 0.6675977653631285,
+    "switch_rate_controlled": 0.2764460797575889,
+    "switch_rate_indeterminate": 0.39244712990936553,
+    "switch_rate_ratio": 2.414929399427672,
+    "new_agent_progressing": 0.6157948197054343,
+    "new_agent_controlled": 0.2307234457009902,
+    "z_unclustered": 59.50562218632819,
+    "clustered": {
+      "progressing_patients": 1767,
+      "progressing_mean": 0.6445878131173299,
+      "progressing_se": 0.008383643159107548,
+      "controlled_patients": 3171,
+      "controlled_mean": 0.303008038525861,
+      "controlled_se": 0.005945545825042903,
+      "indeterminate_patients": 2576,
+      "indeterminate_mean": 0.37771872925211436,
+      "indeterminate_se": 0.008011997965665771,
+      "difference": 0.34157977459146893,
+      "standard_error": 0.010277888293659153,
+      "z": 33.234431512765454,
+      "minimum_detectable_difference": 0.028794379916931803
+    },
+    "forward_minus_backward_progressing": 0.2938039614017268,
+    "forward_minus_backward_controlled": -0.050159623397002306,
+    "ecog_patients": 3951,
+    "ecog_share_of_cohort": 0.7360283159463488,
+    "ecog_repeated_patients": 2429,
+    "ecog_moving_share": 1.0,
+    "ecog_documented_change_share": 0.4524962742175857,
+    "ecog_ever_worsened_share": 0.9477151090983944,
+    "ecog_encoding": {
+      "consecutive_pairs": 27692,
+      "equal_consecutive_pairs": 0,
+      "same_day_pairs": 1790,
+      "equal_same_day_pairs": 0,
+      "change_point_encoded": true
+    },
+    "ecog_first_value_counts": {
+      "0": 3143,
+      "1": 722,
+      "2": 71,
+      "3": 12,
+      "4": 3
+    },
+    "neoadjuvant_share_stage_1_3_posthoc": 0.4738317757009346,
+    "opportunity_prediction_met": true,
+    "primary_prediction_met": true,
+    "placebo_in_time_prediction_met": true,
+    "label_ordering_prediction_met": true,
+    "ecog_is_a_state_prediction_met": null,
+    "ecog_is_a_state_prediction_vacuous": true,
+    "ecog_is_a_state_nominal_value": 1.0,
+    "ecog_moving_share_floor": 0.5,
+    "timing_axis_prediction_met": false
+  }
+}

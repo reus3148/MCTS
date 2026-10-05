@@ -1,0 +1,6 @@
+axis,patients,cohort,share,level_resolution,basis
+timing,2507,5368,0.467026825633383,True,"surgery and chemotherapy start dates, both anchored at diagnosis"
+surgery,3542,5368,0.6598360655737705,False,SUBTYPE is PROCEDURE/SAMPLE only - no BCS vs mastectomy
+chemo,3288,5368,0.6125186289120715,partial,agent identity and regimen count observable; dose density is not
+endocrine,3449,5368,0.642511177347243,partial,cumulative duration separates standard from extended; adherence is not observed
+radiation,2702,5368,0.5033532041728763,False,"one SUBTYPE value for every row - no site, dose or fractionation"

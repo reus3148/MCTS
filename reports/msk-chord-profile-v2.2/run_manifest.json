@@ -1,0 +1,49 @@
+{
+  "run_date": "2026-10-05",
+  "generated_at": "2026-10-05T18:06:07+09:00",
+  "git_commit_before_run": "0377dd31e51adc3c55fec88fa8f487752a12a421",
+  "inputs": {
+    "samples": {
+      "path": "data/external/msk_chord_2024/data_clinical_sample.txt",
+      "sha256": "a0ef977eee6fabde26521b74f7a7d23c8b388678a1618a6a98555aad50bb2c7c"
+    },
+    "patients": {
+      "path": "data/external/msk_chord_2024/data_clinical_patient.txt",
+      "sha256": "dcf83b7eef711def937f968189493ad0ce8ee8b9512a901733d7d27f11228b0c"
+    },
+    "diagnosis": {
+      "path": "data/external/msk_chord_2024/data_timeline_diagnosis.txt",
+      "sha256": "8f04ec6bf6d066bee2ad438bd083a59705c0b08ac4de1c7d89c090c1d598c780"
+    },
+    "treatment": {
+      "path": "data/external/msk_chord_2024/data_timeline_treatment.txt",
+      "sha256": "d9e8198ead2d788cd74be80ffc3f8677d02d76d3e8101dd90bc53f69e4fc2329"
+    },
+    "surgery": {
+      "path": "data/external/msk_chord_2024/data_timeline_surgery.txt",
+      "sha256": "bc8add4aee83a1e75460506f28cb0dec8f2a3a1e9f7cfdc169ca545846de8e34"
+    },
+    "radiation": {
+      "path": "data/external/msk_chord_2024/data_timeline_radiation.txt",
+      "sha256": "a429e52848b7f6be43afb5d6030b83c5543babf7a45724e5da00a7bcd717856c"
+    },
+    "performance_status": {
+      "path": "data/external/msk_chord_2024/data_timeline_performance_status.txt",
+      "sha256": "7395e32c7c9c84ec2cdcaefb77edea8ee54e54a2dba18a034e244f8ddf9e9dab"
+    },
+    "progression": {
+      "path": "data/external/msk_chord_2024/data_timeline_progression.txt",
+      "sha256": "fc13e24bd2dbed0d09e4b2b4620be7e129a1ec65dd7b455172ea2b0d1b5d2c95"
+    },
+    "cancer_presence": {
+      "path": "data/external/msk_chord_2024/data_timeline_cancer_presence.txt",
+      "sha256": "320e56bf013fafd1804c86e4387b253d116c898bf7581556e060ef0d542400d3"
+    }
+  },
+  "data_dir": "data/external/msk_chord_2024",
+  "entry_point": "analysis/49_run_msk_chord_profile.py",
+  "derived_dir": "data/external/msk_chord_2024_derived",
+  "derived_note": "Patient-level intermediates are written there, not to tables/. MSK-CHORD is CC BY-NC-ND 4.0 (NoDerivatives), so per-patient derived tables are not redistributable; tables/ holds aggregates only.",
+  "base_seed": null,
+  "seed_note": "no randomness - every number here is a count or a rate"
+}

@@ -198,6 +198,8 @@ Monte Carlo Tree Search(MCTS) 정책을 비교하는 학부 연구 프로젝트�
 [등급 지도 v2.4 보고서](reports/burden-map-v2.4/README.md),
 [v0.5 환경 재실행](reports/robustness-v0.5env/README.md),
 [Target trial 프로토콜](docs/target-trial-protocol.md),
+**무엇을 주장하고 무엇을 주장하지 않는지는 [최종 주장 세트](docs/final-claims.md)에**
+한 곳으로 모았습니다 — 논문 초록과 최종 발표가 거기서 나옵니다.
 날짜별 작업 근거는 [프로젝트 타임라인](PROJECT_TIMELINE.md)에 정리되어 있습니다.
 
 ## 저장소 구조

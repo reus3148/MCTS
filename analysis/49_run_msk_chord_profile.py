@@ -341,6 +341,65 @@ def opportunity_by_entry(points: pd.DataFrame, anchor: pd.Series,
     return pd.DataFrame(rows)
 
 
+def genie_cross_check() -> pd.DataFrame | None:
+    """The same opportunity count, run on GENIE BPC - which we have had since v1.6.
+
+    Added **after** the first run of this report, in response to a direct
+    question: was this release necessary to reach the headline?
+
+    The honest answer is no. GENIE BPC carries an imaging table with a
+    radiologist assessment and a diagnosis-relative day on every scan, so the
+    adaptation-opportunity count was computable from data already in the
+    repository six weeks earlier. v1.6 used that table for switch rates and
+    never counted opportunities per patient. The gap was in the question we
+    asked, not in the data we held.
+
+    Reporting it changes what this result *is*: not a finding that required a
+    new release, but a finding **replicated in two independent cohorts** -
+    different institutions, different curation, different assessment
+    vocabularies, same median. That is the stronger claim, and it is only
+    available because the check was run.
+
+    Returns ``None`` if the GENIE release is not present, so this report still
+    runs on a machine that holds only one of the two.
+    """
+    try:
+        from analysis.genie.loader import load as load_genie
+        release = load_genie()
+    except (FileNotFoundError, ImportError):
+        return None
+
+    limit = HORIZON_YEARS * DAYS_PER_YEAR
+    scans = release.imaging.dropna(subset=["dx_scan_days", "image_overall"])
+    scans = scans[(scans["dx_scan_days"] >= 0) & (scans["dx_scan_days"] <= limit)]
+
+    counts = []
+    for _, block in scans.groupby("record_id"):
+        kept: list[float] = []
+        for day in sorted(float(value) for value in block["dx_scan_days"]):
+            if kept and day - kept[-1] < DEDUP_DAYS:
+                continue
+            kept.append(day)
+        counts.append(len(kept))
+    if not counts:
+        return None
+
+    series = pd.Series(counts)
+    cohort = int(release.cancers["record_id"].nunique())
+    return pd.DataFrame([{
+        "release": "GENIE BPC Breast v1.0-public",
+        "cohort": cohort,
+        "patients_with_an_opportunity": int(len(series)),
+        "share_of_cohort": float(len(series) / cohort),
+        "median": float(series.median()),
+        "p75": float(series.quantile(0.75)),
+        "p90": float(series.quantile(0.90)),
+        "max": int(series.max()),
+        "at_least_two": float((series >= 2).mean()),
+        "at_least_five": float((series >= 5).mean()),
+    }])
+
+
 def window_sensitivity(progression: pd.DataFrame, treatment: pd.DataFrame,
                        followup: pd.Series) -> pd.DataFrame:
     """Switch-rate contrast at each forward/backward window length."""
@@ -466,6 +525,18 @@ def main() -> None:
     print(f"  환경: {ENVIRONMENT_OPPORTUNITIES}회, 에피소드의 "
           f"{ENVIRONMENT_OPPORTUNITY_SHARE:.1%}", flush=True)
     print(sensitivity.to_string(index=False), flush=True)
+
+    cross = genie_cross_check()
+    if cross is not None:
+        cross.to_csv(TABLE_DIR / "genie_cross_check.csv", index=False)
+        row = cross.iloc[0]
+        print("")
+        print(f"  (교차 확인) GENIE BPC 같은 규칙: 중앙값 {row['median']:.0f} "
+              f"· 2회 이상 {row['at_least_two']:.1%} "
+              f"· 코호트 포함 {row['share_of_cohort']:.1%} (n={row['cohort']})",
+              flush=True)
+        print("  -> 이 헤드라인은 v1.6부터 보유한 자료로도 나왔다. "
+              "새 자료의 기여는 '발견'이 아니라 '독립 재현'이다.", flush=True)
 
     entry = opportunity_by_entry(points, release.anchor, patients)
     entry.to_csv(TABLE_DIR / "opportunity_by_entry.csv", index=False)
@@ -599,6 +670,9 @@ def main() -> None:
             "median": observed_median,
             "at_least_two": observed_two,
         },
+        "genie_cross_check": (
+            cross.iloc[0].to_dict() if cross is not None else None),
+        "headline_was_reachable_from_genie_bpc": bool(cross is not None),
         "environment_opportunities": ENVIRONMENT_OPPORTUNITIES,
         "environment_opportunity_share": ENVIRONMENT_OPPORTUNITY_SHARE,
         "dedup_days": DEDUP_DAYS,

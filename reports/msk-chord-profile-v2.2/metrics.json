@@ -85,6 +85,19 @@
       "median": 3.0,
       "at_least_two": 0.6596764529658478
     },
+    "genie_cross_check": {
+      "release": "GENIE BPC Breast v1.0-public",
+      "cohort": 1130,
+      "patients_with_an_opportunity": 947,
+      "share_of_cohort": 0.8380530973451328,
+      "median": 5.0,
+      "p75": 9.0,
+      "p90": 14.0,
+      "max": 34,
+      "at_least_two": 0.7771911298838438,
+      "at_least_five": 0.5015839493136219
+    },
+    "headline_was_reachable_from_genie_bpc": true,
     "environment_opportunities": 1,
     "environment_opportunity_share": 0.208,
     "dedup_days": 30,

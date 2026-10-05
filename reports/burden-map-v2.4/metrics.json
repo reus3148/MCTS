@@ -1,0 +1,88 @@
+{
+  "run_date": "2026-10-05",
+  "analysis_label": "burden-map-v2.4",
+  "question": "If the binary recurrence flag were graded into the three levels a progression call distinguishes, would an indifference region appear where v2.0 found none?",
+  "estimand": "None. A deterministic preview of the environment's own arithmetic: the expected remaining utility of treating versus declining at a salvage state, swept over the declared salvage hazard ratio, the grade of disease burden and the separation between grades. No search, no random draws, no change to the environment.",
+  "scope_warning": "Everything here is a property of our declared parameters, not of patients. It says whether a graded state *could* carry a decision under the environment we have declared; it does not say that grading is clinically correct, and the separation endpoint is declared rather than estimated.",
+  "prespecified_prediction": {
+    "null_control": "At separation 0 the across-grade spread is < 0.005 and the per-patient spread reproduces v2.0's 0.01 to within 0.005.",
+    "primary_grading_creates_a_region": "At separation 1.0 the across-grade spread of the indifference ratio is >= 0.05 - five times v2.0's across-patient spread.",
+    "monotone": "The across-grade spread grows monotonically with separation.",
+    "grades_disagree": "At separation 1.0 some salvage hazard ratio has a majority of progressing cells favouring treatment while a majority of controlled cells favour declining.",
+    "why": "v2.0 found no indifference region because a binary recurrence flag gives every patient the same post-recurrence hazard. v2.2 showed recorded care acts on a graded progression signal (2.41x) and v2.3 showed it does not visibly act on performance status. Grading the flag is the remaining candidate, and arithmetic can test it before any environment code is written."
+  },
+  "design": {
+    "config": "configs/dynamic_v0_7.json",
+    "patients": 40,
+    "sampling": "balanced subtype, two disjoint cohorts of 20",
+    "grade_weight_source": "MSK-CHORD breast cohort, 32,977 scored progression calls (reports/msk-chord-profile-v2.2)",
+    "mean_neutral": true,
+    "search": "none - deterministic expectation"
+  },
+  "verdict": {
+    "patients": 40,
+    "recurrence_years": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "separations": [
+      0.0,
+      0.1,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "hazard_ratios": [
+      0.8,
+      1.0,
+      21
+    ],
+    "grade_weights": {
+      "controlled": 0.5604208994147436,
+      "indeterminate": 0.2007459744670528,
+      "progressing": 0.2388331261182036
+    },
+    "full_separation": {
+      "controlled": 0.5,
+      "indeterminate": 1.0,
+      "progressing": 2.5
+    },
+    "v20_patient_spread": 0.01,
+    "null_grade_spread": 0.0,
+    "null_patient_spread": 0.011584218438577376,
+    "full_grade_spread": 0.014402070414277546,
+    "full_patient_spread": 0.008408368968723878,
+    "ratio_by_grade_at_full": {
+      "controlled": 0.9497623256855166,
+      "indeterminate": 0.9641643960997941,
+      "progressing": 0.9622689231430304
+    },
+    "undefined_cells_at_full": 0,
+    "monotone": true,
+    "disagreement_at_full": {
+      "exists": true,
+      "ratios": 2,
+      "widest_ratio": 0.96,
+      "progressing_treat_share": 0.73125,
+      "controlled_treat_share": 0.1375,
+      "indeterminate_treat_share": 0.75625,
+      "ratio_range": [
+        0.95,
+        0.96
+      ]
+    },
+    "action_value_noise": 0.02,
+    "max_value_of_grade_information": 0.0007029069089469918,
+    "max_value_at_ratio": 0.96,
+    "noise_to_information_ratio": 28.45326990733599,
+    "channel_stakes": 0.07570174409415104,
+    "resolution_clears_noise_posthoc": false,
+    "null_control_prediction_met": true,
+    "primary_prediction_met": false,
+    "monotone_prediction_met": true,
+    "disagreement_prediction_met": true
+  }
+}

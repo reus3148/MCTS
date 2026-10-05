@@ -1,0 +1,92 @@
+{
+  "run_date": "2026-10-05",
+  "analysis_label": "ecog-state-v2.3",
+  "question": "Does recorded care act on performance status - by stopping treatment after it worsens, by withholding chemotherapy at poor levels - and does it move faster once disease progresses?",
+  "estimand": "None. Descriptive associations in the breast slice of MSK-CHORD between recorded ECOG changes and subsequent systemic-treatment status, between the ECOG in force and the channel started, and between first progression and the rate of recorded worsening.",
+  "scope_warning": "Descriptive only and confounded by indication in both directions: treatment stops because patients deteriorate, and patients deteriorate partly because of treatment. These say recorded care and performance status move together, not that either causes the other. The release records ECOG change points rather than measurements (v2.2), so counts are of documented changes.",
+  "licence": "CC BY-NC-ND 4.0. Aggregates and per-file SHA-256 only; patient-level intermediates stay under data/ (git-ignored). Cite Jee et al., Nature 2024 (PMID 39506116).",
+  "prespecified_prediction": {
+    "primary_treatment_stops_after_worsening": "Among ECOG changes on treatment, the share stopped after 90 days is >= 10% points higher after a worsening than after an improvement.",
+    "placebo_in_time": "For worsenings the forward-minus-backward gap exceeds the same gap for improvements.",
+    "level_gates_chemotherapy": "Among systemic starts, the chemotherapy share is >= 10% points lower at ECOG >= 2 than at ECOG 0-1.",
+    "state_dependence": "Recorded worsenings per person-year are >= 1.5x higher after the first progression call than before it.",
+    "why": "v2.2 gave a target (3 adaptation points in 66% of patients) but our state carries almost nothing to condition on, so opening decisions first would repeat v1.8/v1.9/v2.0. A variable earns a place in the state vector only if the policy would act differently on it."
+  },
+  "design": {
+    "release": "MSK-CHORD (MSK, Nature 2024), cBioPortal msk_chord_2024",
+    "cancer_type": "Breast Cancer",
+    "horizon_years": 5.0,
+    "window_days": 90,
+    "window_sensitivity": [
+      60,
+      90,
+      180
+    ],
+    "poor_performance_cut": 2,
+    "treatment_definition": "merged spans of Chemo/Hormone/Targeted/Biologic/Immuno; supportive and investigational excluded"
+  },
+  "verdict": {
+    "cohort": 5368,
+    "horizon_years": 5.0,
+    "window_days": 90,
+    "ecog_changes": 14740,
+    "ecog_change_patients": 2429,
+    "changes_on_treatment": 9783,
+    "stop_rate_worsened": 0.1465791567223548,
+    "stop_rate_improved": 0.1331230283911672,
+    "stop_gap": 0.013456128331187617,
+    "z_unclustered": 1.9168728853073633,
+    "clustered": {
+      "worsened_patients": 1870,
+      "worsened_mean": 0.18265742231523213,
+      "improved_patients": 1788,
+      "improved_mean": 0.16420476604488438,
+      "difference": 0.018452656270347756,
+      "standard_error": 0.010830076899920136,
+      "z": 1.7038342793746766,
+      "minimum_detectable_difference": 0.030341383353842975
+    },
+    "forward_minus_backward_worsened": -0.12112171837708832,
+    "forward_minus_backward_improved": -0.09274447949526815,
+    "chemo_gate": {
+      "good_starts": 16240,
+      "good_chemo_share": 0.44396551724137934,
+      "poor_starts": 596,
+      "poor_chemo_share": 0.5251677852348994,
+      "gap": -0.08120226799352004,
+      "z_unclustered": -3.916187057598458
+    },
+    "chemo_gate_by_stage_posthoc": {
+      "Stage 1-3": {
+        "good_chemo_share": 0.47701949860724235,
+        "poor_chemo_share": 0.5849673202614379,
+        "poor_starts": 306,
+        "gap": -0.10794782165419559
+      },
+      "Stage 4": {
+        "good_chemo_share": 0.3640572390572391,
+        "poor_chemo_share": 0.46206896551724136,
+        "poor_starts": 290,
+        "gap": -0.09801172646000228
+      }
+    },
+    "stop_gap_by_size_posthoc": {
+      "1": 0.01518028120246498,
+      "2": 0.0008975901655338403,
+      "3": -0.06929324115712464,
+      "4": -0.1331230283911672
+    },
+    "recent_start_share_posthoc": {
+      "improved": 0.22586750788643534,
+      "worsened": 0.2677008750994431
+    },
+    "poor_performance_cut": 2,
+    "worsenings_per_year_before": 1.0631020394932016,
+    "worsenings_per_year_after": 2.7093862538089857,
+    "worsening_ratio": 2.5485665092887935,
+    "primary_prediction_met": false,
+    "placebo_in_time_prediction_met": false,
+    "chemo_gate_prediction_met": false,
+    "state_dependence_prediction_met": true
+  }
+}

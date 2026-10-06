@@ -212,6 +212,8 @@ Monte Carlo Tree Search(MCTS) 정책을 비교하는 학부 연구 프로젝트�
 [Target trial 프로토콜](docs/target-trial-protocol.md),
 **무엇을 주장하고 무엇을 주장하지 않는지는 [최종 주장 세트](docs/final-claims.md)에**
 한 곳으로 모았습니다 — 논문 초록과 최종 발표가 거기서 나옵니다.
+아홉 달치 **사람 검토 항목 29건의 처분**은 [사람 검토](docs/human-review.md)에 있습니다
+— **논문을 막는 것은 2건**입니다.
 날짜별 작업 근거는 [프로젝트 타임라인](PROJECT_TIMELINE.md)에 정리되어 있습니다.
 
 ## 저장소 구조

@@ -1,0 +1,127 @@
+{
+  "run_date": "2026-10-06",
+  "analysis_label": "stakes-map-v2.5",
+  "question": "Is the adaptive channel unusable because it is too small, or because it is a yes/no rather than a choice among treatment lines?",
+  "estimand": "None. A deterministic preview of the environment's own arithmetic: the expected remaining utility of each salvage line at a graded disease state, swept over the channel's declared stakes and over two channel structures. No search, no random draws, no change to the committed environment.",
+  "scope_warning": "Everything here is a property of our declared parameters, not of patients. The ladder's endpoint is declared and cannot be estimated from any dataset we hold - MSK-CHORD's left truncation alone rules out a survival contrast by line (v2.2).",
+  "prespecified_prediction": {
+    "null_control": "At scale 0, channel stakes, state-dependence and information value are all < 1e-12 in both arms.",
+    "stakes": "At scale 1 the ladder arm's channel stakes exceed v2.4's 0.0757 by >= 2.0x.",
+    "state_dependence": "At scale 1 the ladder arm's best line differs across grades for >= 30% of decisions; the binary arm's for < 10%.",
+    "primary_resolution_structure_vs_magnitude": "At matched channel stakes, the ladder arm's expected value of knowing the grade is >= 3.0x the binary arm's.",
+    "crossing": "Some scale <= 1 brings the ladder arm's per-decision information value to the 0.02 noise floor.",
+    "why": "v2.4 found the salvage channel cannot carry an adaptive decision and that stakes, not state resolution, were binding. Two different fixes follow - make the channel bigger, or make it a choice among lines rather than a yes/no - and they imply different rewrites. v2.4's pre-registration omitted resolution, the leg that carried its conclusion; all three legs are registered here."
+  },
+  "design": {
+    "config": "configs/dynamic_v0_7.json",
+    "disease_grading": "burden.py at separation 1.0 (v2.4)",
+    "arms": {
+      "binary": [
+        "none",
+        "systemic"
+      ],
+      "ladder": [
+        "none",
+        "mild",
+        "systemic",
+        "intensive"
+      ]
+    },
+    "full_ladder": {
+      "none": {
+        "death": 1.0,
+        "recurrence": 1.0,
+        "burden": 0.0,
+        "toxicity": 0.0
+      },
+      "mild": {
+        "death": 0.92,
+        "recurrence": 1.0,
+        "burden": 0.05,
+        "toxicity": 0.08
+      },
+      "systemic": {
+        "death": 0.7,
+        "recurrence": 1.0,
+        "burden": 0.2,
+        "toxicity": 0.35
+      },
+      "intensive": {
+        "death": 0.5,
+        "recurrence": 1.0,
+        "burden": 0.4,
+        "toxicity": 0.55
+      }
+    },
+    "patients": 40,
+    "sampling": "balanced subtype, two disjoint cohorts of 20",
+    "search": "none - deterministic expectation"
+  },
+  "verdict": {
+    "patients": 40,
+    "scales": [
+      0.0,
+      0.1,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "separation": 1.0,
+    "today_config_scale": 0.45564997558586984,
+    "v24_channel_stakes": 0.0757,
+    "v24_information_value": 0.0007,
+    "action_value_noise": 0.02,
+    "ladder_stakes_at_full": 0.208045608187879,
+    "binary_stakes_at_full": 0.11299440853151148,
+    "ladder_stakes_multiple_of_v24": 2.7482907290340686,
+    "ladder_switch_share_at_full": 0.0,
+    "binary_switch_share_at_full": 0.0,
+    "ladder_information_at_full": -1.7347234759768072e-19,
+    "binary_information_at_full": -2.6020852139652105e-19,
+    "ladder_information_pooled_at_full": 0.0,
+    "matched_stakes": {
+      "target_stakes": 0.208045608187879,
+      "binary_reaches_target": false,
+      "binary_information": NaN,
+      "ladder_reaches_target": true,
+      "ladder_information": -1.7347234759768072e-19,
+      "ladder_scale": 1.0
+    },
+    "crossing_scale_for_noise_floor": NaN,
+    "cost_sweep_posthoc": {
+      "multiples": [
+        1.0,
+        1.5,
+        2.0,
+        2.5,
+        3.0,
+        3.5,
+        4.0,
+        4.5,
+        5.0,
+        6.0,
+        8.0,
+        12.0
+      ],
+      "first_multiple_with_two_lines": 1.5,
+      "first_multiple_with_grade_split": 1.5,
+      "max_information_per_decision": 0.017435938923376658,
+      "clears_noise_floor": false,
+      "share_of_noise_floor": 0.8717969461688329,
+      "peak_cost_multiple": 4.5,
+      "peak_channel_stakes": 0.0392201552342506,
+      "peak_grade_switch_share": 0.975,
+      "peak_grade_conditional_share_of_stakes": 0.4445657805084365,
+      "binary_information_at_peak_stakes": 4.557943091741446e-20,
+      "v24_grade_conditional_share_of_stakes": 0.009247027741083222,
+      "information_multiple_over_v24": 24.90848417625237
+    },
+    "pre_registered_ladder_has_a_dominant_rung": true,
+    "null_control_prediction_met": true,
+    "stakes_prediction_met": true,
+    "state_dependence_prediction_met": false,
+    "primary_prediction_met": false,
+    "crossing_prediction_met": false
+  }
+}

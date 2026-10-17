@@ -215,7 +215,8 @@ Monte Carlo Tree Search(MCTS) 정책을 비교하는 학부 연구 프로젝트�
 아홉 달치 **사람 검토 항목 29건의 처분**은 [사람 검토](docs/human-review.md)에 있습니다
 — **논문을 막는 것은 2건**입니다.
 주장 세트를 IMRaD로 편 **[논문 초고](docs/paper-draft.md)** 가 수치까지 채운 상태로
-있습니다(그림 8장 확정).
+있습니다(그림 8장 확정). 부록은 **[NCCN 명세](docs/nccn-policy-spec.md)** 와
+**[한계 통합](docs/limitations.md)**(심각도 순 26건 + 철회 4건)입니다.
 날짜별 작업 근거는 [프로젝트 타임라인](PROJECT_TIMELINE.md)에 정리되어 있습니다.
 
 ## 저장소 구조

@@ -7,7 +7,7 @@ import './StoryPage.css'
 // (or a reviewer) should be able to get without reading the entries in order.
 // `final-claims` comes first because it is the only one that says what we would
 // actually put our name to - the others explain how we got there.
-const rawFiles = import.meta.glob('../../docs/{final-claims,research-story,results-reconciliation,human-review,proposal-vs-delivered}.md', {
+const rawFiles = import.meta.glob('../../docs/{final-claims,paper-draft,research-story,results-reconciliation,human-review,proposal-vs-delivered}.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -15,6 +15,7 @@ const rawFiles = import.meta.glob('../../docs/{final-claims,research-story,resul
 
 const ORDER = [
   { slug: 'final-claims', label: '최종 주장', blurb: '우리가 주장하는 것과 주장하지 않는 것' },
+  { slug: 'paper-draft', label: '논문 초고', blurb: '주장 세트를 IMRaD로 편 뼈대 — 수치는 전부 들어 있음' },
   { slug: 'research-story', label: '연구 이야기', blurb: '체스에서 시작해 지금까지, 한 번에 읽는 판' },
   { slug: 'results-reconciliation', label: '숫자 화해', blurb: '효용 격차가 다섯 번 달라진 이유' },
   { slug: 'human-review', label: '사람 검토', blurb: '29개 항목의 처분 — 논문을 막는 건 둘뿐' },

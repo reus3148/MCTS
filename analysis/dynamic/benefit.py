@@ -174,3 +174,35 @@ def guideline_plan(environment: DynamicBreastCancerEnvironment) -> dict[str, str
         "endocrine": "standard" if int(plan[2]) else "none",
         "radiation": ("local" if surgery == "BCS" else "regional") if int(plan[3]) else "none",
     }
+
+
+def crossing_strength(strengths, gaps) -> float:
+    """Where the gap curve first crosses from positive to non-positive.
+
+    Linear interpolation between the two swept settings that bracket the sign
+    change. NaN when the curve never crosses inside the swept range - which is
+    a result, not an error: it means the conclusion does not flip anywhere in
+    the declared range.
+
+    Kept here rather than in a numbered script so the v0.5 sweep (v2.1) and the
+    v0.7 sweep (v2.6) compute the tipping point the same way.
+    """
+    pairs = list(zip(strengths, strengths[1:], gaps, gaps[1:]))
+    for lower, upper, gap_low, gap_high in pairs:
+        if gap_low > 0.0 >= gap_high:
+            span = gap_low - gap_high
+            return float(lower + (upper - lower) * (gap_low / span)) if span else float(lower)
+    return float("nan")
+
+
+def relative_gap(gap: float, guideline_utility: float) -> float:
+    """Gap as a share of the guideline policy's utility.
+
+    v1.9 made this mandatory: the terminal value triples the utility scale, so
+    an absolute gap from v0.7 cannot be set beside one from v0.5. The tipping
+    *strength* needs no such correction - it is where the gap is zero on either
+    scale - but every gap quoted next to it does.
+    """
+    if guideline_utility == 0:
+        raise ValueError("guideline utility must be non-zero")
+    return float(gap) / float(guideline_utility)

@@ -15,7 +15,9 @@ from analysis.dynamic.benefit import (  # noqa: E402
     FULL_BENEFIT,
     HIGHER_LEVEL,
     STANDARD_LEVEL,
+    crossing_strength,
     declared_ladder,
+    relative_gap,
     guideline_plan,
     hazard_at_strength,
     plan_expected_utility,
@@ -170,6 +172,65 @@ class PlanUtilityTests(unittest.TestCase):
             make_environment(with_standard_benefit(RAW_V05, strength)), self.refusal), 12)
             for strength in (0.0, 0.5, 1.0)}
         self.assertEqual(len(values), 1)
+
+
+class CrossingTests(unittest.TestCase):
+    def test_interpolates_between_the_bracketing_settings(self):
+        # +0.02 at 0.4, -0.02 at 0.6 -> crosses halfway, at 0.5.
+        self.assertAlmostEqual(
+            crossing_strength([0.0, 0.4, 0.6], [0.05, 0.02, -0.02]), 0.5, places=12)
+
+    def test_a_curve_that_never_crosses_returns_nan(self):
+        import math
+        self.assertTrue(math.isnan(crossing_strength([0.0, 0.5, 1.0], [0.03, 0.02, 0.01])))
+
+    def test_it_reports_the_first_crossing(self):
+        self.assertAlmostEqual(
+            crossing_strength([0.0, 1.0, 2.0, 3.0], [1.0, -1.0, 1.0, -1.0]), 0.5, places=12)
+
+    def test_landing_exactly_on_zero_counts_as_the_crossing(self):
+        self.assertAlmostEqual(crossing_strength([0.0, 0.5], [0.01, 0.0]), 0.5, places=12)
+
+    def test_relative_gap_divides_by_the_guideline(self):
+        self.assertAlmostEqual(relative_gap(0.02, 0.8), 0.025, places=12)
+        with self.assertRaises(ValueError):
+            relative_gap(0.02, 0.0)
+
+
+class TerminalValueConfigTests(unittest.TestCase):
+    """The dial must be as neutral on v0.7 as on v0.5 (v2.6).
+
+    v2.6 reruns v2.1's sweep on the terminal-value environment and leans on one
+    identity: strength 0 must reproduce v1.9's v0.7 arm bit for bit. That holds
+    only if the dial leaves v0.7 untouched at 0 and never reaches into the
+    salvage block or the tail it carries.
+    """
+
+    RAW_V07 = json.loads((ROOT / "configs" / "dynamic_v0_7.json").read_text(encoding="utf-8"))
+
+    def test_strength_zero_reproduces_v07_exactly(self):
+        self.assertEqual(with_standard_benefit(self.RAW_V07, 0.0), self.RAW_V07)
+
+    def test_the_salvage_block_and_the_tail_are_never_touched(self):
+        for strength in (0.445, 1.0):
+            raised = with_standard_benefit(self.RAW_V07, strength)
+            self.assertEqual(raised["hazard_multipliers"]["salvage"],
+                             self.RAW_V07["hazard_multipliers"]["salvage"])
+            self.assertEqual(raised["terminal_tail_years"],
+                             self.RAW_V07["terminal_tail_years"])
+            self.assertEqual(raised["hazard_multipliers"]["death_after_recurrence"],
+                             self.RAW_V07["hazard_multipliers"]["death_after_recurrence"])
+
+    def test_the_ladder_keeps_its_increments_on_v07(self):
+        raised = with_standard_benefit(self.RAW_V07, 0.5)
+        for channel in FULL_BENEFIT:
+            standard, higher = STANDARD_LEVEL[channel], HIGHER_LEVEL[channel]
+            for outcome in ("death", "recurrence"):
+                now = (self.RAW_V07["hazard_multipliers"][channel][higher][outcome]
+                       / self.RAW_V07["hazard_multipliers"][channel][standard][outcome])
+                after = (raised["hazard_multipliers"][channel][higher][outcome]
+                         / raised["hazard_multipliers"][channel][standard][outcome])
+                self.assertAlmostEqual(after, now, places=12)
 
 
 if __name__ == "__main__":  # pragma: no cover

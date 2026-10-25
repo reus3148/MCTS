@@ -113,6 +113,8 @@ REPORT_DIR = ROOT / "reports" / "tipping-v07-v2.6"
 TABLE_DIR = REPORT_DIR / "tables"
 V19_METRICS = ROOT / "reports" / "horizon-v1.9" / "metrics.json"
 V21_METRICS = ROOT / "reports" / "benefit-tipping-v2.1" / "metrics.json"
+#: Per-arm checkpoints. Under data/ (git-ignored): intermediate, not a result.
+CACHE_DIR = ROOT / "data" / "processed" / "tipping_v07_v2_6_arms"
 
 RUN_DATE = "2026-10-22"
 PER_SUBTYPE = 5                 # v1.2's cohorts A and B: 40 patients
@@ -260,14 +262,25 @@ def main() -> None:
 
     results = {}
     started = time.perf_counter()
+    # Each arm takes ~13 minutes and the first attempt was lost when the session
+    # ended after three arms. Arms are independent given the fixed seeds, so a
+    # finished arm is cached and a restart picks up where it stopped - the
+    # result is identical to an uninterrupted run.
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
     for strength in STRENGTHS:
         key = key_for(strength)
+        cached = CACHE_DIR / f"{key}.json"
+        if cached.exists():
+            results[key] = json.loads(cached.read_text(encoding="utf-8"))
+            print(f"\n[{key}] strength {strength:.3f} - cached, skipped", flush=True)
+            continue
         config = config_from_dict(with_standard_benefit(raw07, strength))
         print(f"\n[{key}] strength {strength:.3f} running...", flush=True)
         result = evaluate(sample, neutral_model, rfs_model, config)
         result["strength"] = float(strength)
         result["relative_gap"] = relative_gap(result["utility_gap"], result["nccn_utility"])
         results[key] = result
+        cached.write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
         accepted = result["mcts_accept_pct"]
         print(f"  gap {result['utility_gap']:+.5f} (SE {result['standard_error']:.5f}) "
               f"· 상대 {result['relative_gap']:+.3%} · MCTS {result['mcts_utility']:.4f} "

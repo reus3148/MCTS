@@ -286,10 +286,10 @@ MCTS가 낫다"로 쓰지 않습니다.
 
 ### 최종 PPT — **초안 완료 (10-22)**
 
-19장 덱(10-25 v2.6 장 `tipping-v07` 추가) + 장마다 발표자 노트: Claude 아티팩트 `MCTS-ONC 최종 발표`
+25장 덱(11-01 재구성: 본편 18장 + 부록 7장, "엔진으로 정석을 검증하는 법" — 네 단계 방법론 구조, IBM Plex 디자인, 화면에서 출처·설명 문장 제거) + 장마다 발표자 노트: Claude 아티팩트 `MCTS-ONC 최종 발표`
 (https://claude.ai/artifact/4c3wRbGxQH4Ac52KFNz9nc). **비공개 링크**라 팀원이 보려면 덱
 페이지의 Share 메뉴에서 공유해야 합니다. PPTX·PDF로 내려받을 수 있습니다.
-EBCTCG 대조가 끝나면 바꿀 자리는 `src/minutes/2026-10-22-final-deck.md`에 있습니다.
+화면에는 출처를 넣지 않고 장별 수치·출처는 `docs/deck-sources.md`에 둡니다. EBCTCG 대조가 끝나면 44.5%가 나오는 장(`method`·`tipping`·`verdict`·부록 A·B)을 그 문서에서 찾아 바꿉니다.
 
 ### 최종 PPT 구성안 (15~18장) — 초안이 따른 원안
 
